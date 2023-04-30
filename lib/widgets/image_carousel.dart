@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ImageContainer extends StatelessWidget {
-  const ImageContainer({
+class ImageCarousel extends StatelessWidget {
+  const ImageCarousel({
     Key? key,
     this.height = 125,
     this.borderRadius = 20,
@@ -28,16 +28,26 @@ class ImageContainer extends StatelessWidget {
       margin: margin,
       padding: padding,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          bottomLeft: Radius.circular(10.0),
+          bottomRight: Radius.circular(10.0),
+          topRight: Radius.circular(80.0),
+        ),
         image: DecorationImage(
           image: NetworkImage(imageUrl),
           fit: BoxFit.cover,
         ),
       ),
       child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          gradient: const LinearGradient(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10.0),
+            bottomLeft: Radius.circular(10.0),
+            bottomRight: Radius.circular(10.0),
+            topRight: Radius.circular(80.0),
+          ),
+          gradient: LinearGradient(
               begin: Alignment.center,
               end: Alignment.bottomCenter,
               colors: [Colors.transparent, Colors.black87]),

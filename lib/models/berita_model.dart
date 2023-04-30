@@ -5,6 +5,7 @@ class BeritaModel {
   final String gambar;
   final String nama;
   final String slug;
+  // ignore: non_constant_identifier_names
   final String created_at;
 
   BeritaModel(
@@ -14,6 +15,7 @@ class BeritaModel {
       required this.gambar,
       required this.nama,
       required this.slug,
+      // ignore: non_constant_identifier_names
       required this.created_at});
 
   factory BeritaModel.fromJson(Map<String, dynamic> json) {

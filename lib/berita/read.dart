@@ -10,23 +10,33 @@ class ReadScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ImageContainer(
-      width: double.infinity,
-      imageUrl: "http://sungaipenuhkota.go.id/storage/${e.gambar}",
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+        elevation: 0,
+      ),
+      extendBodyBehindAppBar: true,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.blue.shade900.withOpacity(0.9),
+              Colors.blue,
+            ],
+            begin: const FractionalOffset(0.0, 0.4),
+            end: Alignment.topRight,
+          ),
         ),
-        extendBodyBehindAppBar: true,
-        body: ListView(
+        child: ListView(
           children: [
             NewsHeadline(
               tgl:
                   '${DateTime.parse(e.created_at).day.toString().padLeft(2, '0')}-${DateTime.parse(e.created_at).month.toString().padLeft(2, '0')}-${DateTime.parse(e.created_at).year}',
               judul: e.judul,
+              nama: e.nama,
+              created_at: e.created_at,
             ),
             NewsBody(e: e),
           ],
@@ -50,64 +60,19 @@ class NewsBody extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20.0),
-          topRight: Radius.circular(20.0),
+          // topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(50.0),
         ),
         color: Colors.white,
       ),
       child: Column(
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                CustomTag(
-                  backgroundColor: Colors.black,
-                  children: [
-                    const Icon(
-                      Icons.person,
-                      color: Colors.white,
-                      size: 14,
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      e.nama,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: Colors.white),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 10),
-                CustomTag(
-                  backgroundColor: Colors.grey,
-                  children: [
-                    const Icon(
-                      Icons.schedule,
-                      color: Colors.white,
-                      size: 14,
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      '${DateTime.now().difference(DateTime.parse(e.created_at)).inHours} Jam yang lalu',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: Colors.white),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            e.judul,
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: Colors.black, fontWeight: FontWeight.bold, height: 1.25),
-          ),
           const SizedBox(height: 10),
+          ImageContainer(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.35,
+              imageUrl: "http://sungaipenuhkota.go.id/storage/${e.gambar}"),
+          const SizedBox(height: 20),
           Text(
             e.isi
                 .replaceAll(RegExp(r'<[^>]*>|&nbsp;'), '')
@@ -124,10 +89,17 @@ class NewsBody extends StatelessWidget {
 }
 
 class NewsHeadline extends StatelessWidget {
-  const NewsHeadline({Key? key, required this.judul, required this.tgl})
-      : super(key: key);
+  const NewsHeadline({
+    Key? key,
+    required this.judul,
+    required this.tgl,
+    required this.nama,
+    required this.created_at,
+  }) : super(key: key);
   final String judul;
   final String tgl;
+  final String nama;
+  final String created_at;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -136,7 +108,6 @@ class NewsHeadline extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: MediaQuery.of(context).size.height * 0.15),
           CustomTag(
             backgroundColor: Colors.grey.withAlpha(150),
             children: [
@@ -152,11 +123,53 @@ class NewsHeadline extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             judul,
-            style: Theme.of(context).textTheme.headline6!.copyWith(
+            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                   height: 1.25,
                 ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              CustomTag(
+                backgroundColor: Colors.grey.withAlpha(150),
+                children: [
+                  const Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 14,
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    nama,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: Colors.white),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 10),
+              CustomTag(
+                backgroundColor: Colors.grey.withAlpha(150),
+                children: [
+                  const Icon(
+                    Icons.schedule,
+                    color: Colors.white,
+                    size: 14,
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    '${DateTime.now().difference(DateTime.parse(created_at)).inHours} Jam yang lalu',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: Colors.white),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
