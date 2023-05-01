@@ -1,12 +1,11 @@
 class BeritaModel {
-  final int id;
-  final String judul;
-  final String isi;
-  final String gambar;
-  final String nama;
-  final String slug;
-  // ignore: non_constant_identifier_names
-  final String created_at;
+  int id;
+  String judul;
+  String isi;
+  String gambar;
+  String nama;
+  String slug;
+  String createdAt;
 
   BeritaModel(
       {required this.id,
@@ -15,8 +14,7 @@ class BeritaModel {
       required this.gambar,
       required this.nama,
       required this.slug,
-      // ignore: non_constant_identifier_names
-      required this.created_at});
+      required this.createdAt});
 
   factory BeritaModel.fromJson(Map<String, dynamic> json) {
     return BeritaModel(
@@ -27,6 +25,6 @@ class BeritaModel {
             'https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?w=740',
         slug: json['slug'] ?? 'Slug',
         nama: json['nama'] ?? 'Nama',
-        created_at: json['created_at'] ?? 'Tgl Publikasi');
+        createdAt: json['created_at'] ?? 'Tgl Publikasi');
   }
 }

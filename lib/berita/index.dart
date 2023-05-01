@@ -1,19 +1,20 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:smartcity/berita/pagination.dart';
 import 'package:smartcity/berita/read.dart';
-import 'package:smartcity/data_provider/data_provider.dart';
 import 'package:smartcity/widgets/custom_tag.dart';
 import 'package:smartcity/widgets/image_carousel.dart';
 
 import '../models/berita_model.dart';
-import 'discover.dart';
+import '../providers/api_service_providers.dart';
 
 class Berita extends ConsumerWidget {
   const Berita({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ref) {
+    
     final data = ref.watch(beritaDataProvider);
     return Scaffold(
       appBar: AppBar(
@@ -138,7 +139,7 @@ class BeritaCarousel extends StatelessWidget {
               InkWell(
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const Discover()),
+                    MaterialPageRoute(builder: (context) => Pagination()),
                   );
                 },
                 child: const Text(
@@ -178,7 +179,7 @@ class BeritaCarousel extends StatelessWidget {
                         backgroundColor: Colors.grey.withAlpha(200),
                         children: [
                           Text(
-                            '${DateTime.parse(beritaList[index].created_at).day.toString().padLeft(2, '0')}-${DateTime.parse(beritaList[index].created_at).month.toString().padLeft(2, '0')}-${DateTime.parse(beritaList[index].created_at).year}',
+                            '${DateTime.parse(beritaList[index].createdAt).day.toString().padLeft(2, '0')}-${DateTime.parse(beritaList[index].createdAt).month.toString().padLeft(2, '0')}-${DateTime.parse(beritaList[index].createdAt).year}',
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!

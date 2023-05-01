@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smartcity/berita/read.dart';
 import 'package:smartcity/widgets/image_container.dart';
 
-import '../data_provider/data_provider.dart';
 import '../models/berita_model.dart';
+import '../providers/api_service_providers.dart';
 import '../widgets/bottom_nav_bar.dart';
 
 class Discover extends StatelessWidget {
@@ -132,7 +132,7 @@ class JelajahiBerita extends ConsumerWidget {
                                     ),
                                     const SizedBox(width: 5),
                                     Text(
-                                      '${DateTime.now().difference(DateTime.parse(beritaList[index].created_at)).inHours} Jam yang lalu',
+                                      '${DateTime.now().difference(DateTime.parse(beritaList[index].createdAt)).inHours} Jam yang lalu',
                                       style: const TextStyle(fontSize: 12),
                                     ),
                                   ],

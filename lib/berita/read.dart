@@ -33,10 +33,10 @@ class ReadScreen extends StatelessWidget {
           children: [
             NewsHeadline(
               tgl:
-                  '${DateTime.parse(e.created_at).day.toString().padLeft(2, '0')}-${DateTime.parse(e.created_at).month.toString().padLeft(2, '0')}-${DateTime.parse(e.created_at).year}',
+                  '${DateTime.parse(e.createdAt).day.toString().padLeft(2, '0')}-${DateTime.parse(e.createdAt).month.toString().padLeft(2, '0')}-${DateTime.parse(e.createdAt).year}',
               judul: e.judul,
               nama: e.nama,
-              created_at: e.created_at,
+              createdAt: e.createdAt,
             ),
             NewsBody(e: e),
           ],
@@ -94,12 +94,12 @@ class NewsHeadline extends StatelessWidget {
     required this.judul,
     required this.tgl,
     required this.nama,
-    required this.created_at,
+    required this.createdAt,
   }) : super(key: key);
   final String judul;
   final String tgl;
   final String nama;
-  final String created_at;
+  final String createdAt;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -161,7 +161,7 @@ class NewsHeadline extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    '${DateTime.now().difference(DateTime.parse(created_at)).inHours} Jam yang lalu',
+                    '${DateTime.now().difference(DateTime.parse(createdAt)).inHours} Jam yang lalu',
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium!
