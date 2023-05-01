@@ -1,22 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:smartcity/widgets/image_container.dart';
 
 import '../models/berita_model.dart';
 import '../widgets/custom_tag.dart';
+import '../widgets/reusable_widgets.dart';
 
-class ReadScreen extends StatelessWidget {
-  const ReadScreen({Key? key, required this.e}) : super(key: key);
-  final BeritaModel e;
+class BacaBerita extends StatelessWidget {
+  final Payload e;
+  const BacaBerita({Key? key, required this.e}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      backgroundColor: const Color(0xffF8F9FD),
       extendBodyBehindAppBar: true,
       body: Container(
         decoration: BoxDecoration(
@@ -33,10 +29,10 @@ class ReadScreen extends StatelessWidget {
           children: [
             NewsHeadline(
               tgl:
-                  '${DateTime.parse(e.createdAt).day.toString().padLeft(2, '0')}-${DateTime.parse(e.createdAt).month.toString().padLeft(2, '0')}-${DateTime.parse(e.createdAt).year}',
-              judul: e.judul,
-              nama: e.nama,
-              createdAt: e.createdAt,
+                  '${DateTime.parse(e.createdAt.toString()).day.toString().padLeft(2, '0')}-${DateTime.parse(e.createdAt.toString()).month.toString().padLeft(2, '0')}-${DateTime.parse(e.createdAt.toString()).year}',
+              judul: e.judul.toString(),
+              nama: e.nama.toString(),
+              createdAt: e.createdAt.toString(),
             ),
             NewsBody(e: e),
           ],
@@ -52,7 +48,7 @@ class NewsBody extends StatelessWidget {
     required this.e,
   }) : super(key: key);
 
-  final BeritaModel e;
+  final Payload e;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +56,6 @@ class NewsBody extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
-          // topLeft: Radius.circular(20.0),
           topRight: Radius.circular(50.0),
         ),
         color: Colors.white,
@@ -68,13 +63,23 @@ class NewsBody extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: 10),
-          ImageContainer(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.35,
-              imageUrl: "http://sungaipenuhkota.go.id/storage/${e.gambar}"),
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(10.0),
+                bottomRight: Radius.circular(10.0),
+                topLeft: Radius.circular(10.0),
+                topRight: Radius.circular(50)),
+            child: CachedNetworkImage(
+              imageUrl: 'https://sungaipenuhkota.go.id/storage/${e.gambar}',
+              errorWidget: (context, string, _) {
+                return const Icon(Icons.error);
+              },
+            ),
+          ),
           const SizedBox(height: 20),
           Text(
             e.isi
+                .toString()
                 .replaceAll(RegExp(r'<[^>]*>|&nbsp;'), '')
                 .replaceAll('&quot;', '"'),
             style: Theme.of(context)
@@ -161,7 +166,9 @@ class NewsHeadline extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    '${DateTime.now().difference(DateTime.parse(createdAt)).inHours} Jam yang lalu',
+                    ReusableWidgets.time_passed(
+                        DateTime.parse(createdAt.toString()),
+                        full: false),
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium!

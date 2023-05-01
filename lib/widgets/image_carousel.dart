@@ -32,7 +32,7 @@ class ImageCarousel extends StatelessWidget {
           topLeft: Radius.circular(10.0),
           bottomLeft: Radius.circular(10.0),
           bottomRight: Radius.circular(10.0),
-          topRight: Radius.circular(80.0),
+          topRight: Radius.circular(10.0),
         ),
         image: DecorationImage(
           image: NetworkImage(imageUrl),
@@ -45,7 +45,7 @@ class ImageCarousel extends StatelessWidget {
             topLeft: Radius.circular(10.0),
             bottomLeft: Radius.circular(10.0),
             bottomRight: Radius.circular(10.0),
-            topRight: Radius.circular(80.0),
+            topRight: Radius.circular(10.0),
           ),
           gradient: LinearGradient(
               begin: Alignment.center,
