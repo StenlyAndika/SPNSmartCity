@@ -17,7 +17,7 @@ class BeritaState with _$BeritaState {
 }
 
 class BeritaNotifier extends StateNotifier<BeritaState> {
-  BeritaNotifier() : super(BeritaState(beritaModel: BeritaModel(payload: []))){
+  BeritaNotifier() : super(BeritaState(beritaModel: BeritaModel(payload: []))) {
     loadBerita();
   }
 
@@ -25,19 +25,20 @@ class BeritaNotifier extends StateNotifier<BeritaState> {
     state = state.copyWith(isLoading: true);
     final beritaResponse = await ApiBeritaService().allBerita();
     final berita = BeritaModel.fromJson(beritaResponse);
-    state = state.copyWith(beritaModel: berita,isLoading: false);
+    state = state.copyWith(beritaModel: berita, isLoading: false);
   }
-  
+
   loadSearchedBerita(String title) async {
     state = state.copyWith(isLoading: true);
     final beritaResponse = await ApiBeritaService().beritaSearch(title);
     final berita = BeritaModel.fromJson(beritaResponse);
-    state = state.copyWith(beritaModel: berita,isLoading: false);
+    state = state.copyWith(beritaModel: berita, isLoading: false);
   }
 }
 
 class BeritaCarouselNotifier extends StateNotifier<BeritaState> {
-  BeritaCarouselNotifier() : super(BeritaState(beritaModel: BeritaModel(payload: []))){
+  BeritaCarouselNotifier()
+      : super(BeritaState(beritaModel: BeritaModel(payload: []))) {
     loadCarouselBerita();
   }
 
@@ -45,9 +46,13 @@ class BeritaCarouselNotifier extends StateNotifier<BeritaState> {
     state = state.copyWith(isLoading: true);
     final beritaResponse = await ApiBeritaService().carouselBerita();
     final berita = BeritaModel.fromJson(beritaResponse);
-    state = state.copyWith(beritaModel: berita,isLoading: false);
+    state = state.copyWith(beritaModel: berita, isLoading: false);
   }
 }
 
-final beritaProvider = StateNotifierProvider<BeritaNotifier,BeritaState>((ref)=> BeritaNotifier());
-final beritaCarouselProvider = StateNotifierProvider<BeritaCarouselNotifier,BeritaState>((ref)=> BeritaCarouselNotifier());
+final beritaProvider =
+    StateNotifierProvider.autoDispose<BeritaNotifier, BeritaState>(
+        (ref) => BeritaNotifier());
+final beritaCarouselProvider =
+    StateNotifierProvider<BeritaCarouselNotifier, BeritaState>(
+        (ref) => BeritaCarouselNotifier());

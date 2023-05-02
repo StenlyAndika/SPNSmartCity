@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smartcity/berita/baca.dart';
@@ -20,28 +19,42 @@ class Berita extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xffF8F9FD),
-      extendBodyBehindAppBar: true,
       body: SafeArea(
-        child: Column(
-          children: [
-            const SearchField(),
-            isLoading
-                ? SizedBox(
-                    height: MediaQuery.of(context).size.height / 2,
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-                : Expanded(
-                    child: ListView.builder(
-                      itemCount: berita.payload!.length,
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext context, int index) {
-                        return CardBerita(berita: berita.payload![index]);
-                      },
-                    ),
-                  )
-          ],
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Berita',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium!
+                    .copyWith(color: Colors.black, fontWeight: FontWeight.w900),
+              ),
+              Text(
+                'Dalam kota sungai penuh',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SearchField(),
+              isLoading
+                  ? SizedBox(
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount: berita.payload!.length,
+                        shrinkWrap: true,
+                        itemBuilder: (BuildContext context, int index) {
+                          return CardBerita(berita: berita.payload![index]);
+                        },
+                      ),
+                    )
+            ],
+          ),
         ),
       ),
     );
@@ -56,7 +69,7 @@ class CardBerita extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => Navigator.of(context).push(
-        CupertinoPageRoute(
+        MaterialPageRoute(
           builder: (context) => BacaBerita(
             e: berita,
           ),
@@ -64,7 +77,7 @@ class CardBerita extends StatelessWidget {
       ),
       child: Container(
         padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.only(top: 10, left: 20, right: 20),
+        margin: const EdgeInsets.only(top: 10),
         height: 130,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20), color: Colors.white),
@@ -120,48 +133,40 @@ class CardBerita extends StatelessWidget {
 }
 
 class SearchField extends ConsumerWidget {
-  const SearchField({ Key? key }) : super(key: key);
+  const SearchField({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Debouncer debouncer = Debouncer();
     return Container(
-      margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xff1D1617).withOpacity(0.11),
-                blurRadius: 40,
-                spreadRadius: 0.0
-            )
-          ]
-        ),
-        child: TextField(
-          onChanged: (value) {
-            debouncer.run(() {
-              if (value.isNotEmpty) {
-                ref.read(beritaProvider.notifier).loadSearchedBerita(value);
-              } else {
-                ref.read(beritaProvider.notifier).loadBerita();
-              }
-            });
-          },
-          decoration: InputDecoration(
+      margin: const EdgeInsets.only(top: 20),
+      decoration: BoxDecoration(boxShadow: [
+        BoxShadow(
+            color: const Color(0xff1D1617).withOpacity(0.11),
+            blurRadius: 40,
+            spreadRadius: 0.0)
+      ]),
+      child: TextField(
+        onChanged: (value) {
+          debouncer.run(() {
+            if (value.isNotEmpty) {
+              ref.read(beritaProvider.notifier).loadSearchedBerita(value);
+            } else {
+              ref.read(beritaProvider.notifier).loadBerita();
+            }
+          });
+        },
+        decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
             contentPadding: const EdgeInsets.all(15),
-              hintText: 'Search News',
-              hintStyle: const TextStyle(
-                  color: Color(0xffDDDADA),
-                  fontSize: 14
-                ),
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none
-                )
-          ),
-        ),
+            hintText: 'Search News',
+            hintStyle: const TextStyle(color: Color(0xffDDDADA), fontSize: 14),
+            prefixIcon: const Icon(Icons.search),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide.none)),
+      ),
     );
   }
 }
@@ -171,7 +176,7 @@ class Debouncer {
 
   Timer? _timer;
 
-  Debouncer({this.milliseconds=500});
+  Debouncer({this.milliseconds = 500});
 
   run(VoidCallback action) {
     if (null != _timer) {
