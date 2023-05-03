@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:smartcity/berita/baca.dart';
 
+import 'berita/berita.dart';
 import 'berita/index.dart';
+import 'models/berita_model.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -22,9 +25,13 @@ class MyApp extends StatelessWidget {
           },
         ),
       ),
-      home: SafeArea(
-        child: HomePage(),
-      ),
+      initialRoute: HomePage.nameRoute,
+      routes: {
+        HomePage.nameRoute: (context) => HomePage(),
+        Berita.nameRoute: (context) => const Berita(),
+        BacaBerita.nameRoute: (context) => BacaBerita(
+            e: ModalRoute.of(context)?.settings.arguments as Payload),
+      },
     );
   }
 }

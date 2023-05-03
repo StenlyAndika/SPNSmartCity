@@ -12,48 +12,59 @@ import '../widgets/reusable_widgets.dart';
 class Berita extends ConsumerWidget {
   const Berita({Key? key}) : super(key: key);
 
+  static const nameRoute = '/berita';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     BeritaModel berita = ref.watch(beritaProvider).beritaModel;
     bool isLoading = ref.watch(beritaProvider).isLoading;
 
     return Scaffold(
-      backgroundColor: const Color(0xffF8F9FD),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Berita',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium!
-                    .copyWith(color: Colors.black, fontWeight: FontWeight.w900),
-              ),
-              Text(
-                'Dalam kota sungai penuh',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SearchField(),
-              isLoading
-                  ? SizedBox(
-                      height: MediaQuery.of(context).size.height / 2,
-                      child: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                  : Expanded(
-                      child: ListView.builder(
-                        itemCount: berita.payload!.length,
-                        shrinkWrap: true,
-                        itemBuilder: (BuildContext context, int index) {
-                          return CardBerita(berita: berita.payload![index]);
-                        },
-                      ),
-                    )
-            ],
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xffE0E7FF),
+                Colors.white,
+              ],
+              begin: FractionalOffset(0.0, 0.4),
+              end: Alignment.topLeft,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Berita',
+                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                      color: Colors.black, fontWeight: FontWeight.w900),
+                ),
+                Text(
+                  'Dalam kota sungai penuh',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SearchField(),
+                isLoading
+                    ? SizedBox(
+                        height: MediaQuery.of(context).size.height / 2,
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: berita.payload!.length,
+                          shrinkWrap: true,
+                          itemBuilder: (BuildContext context, int index) {
+                            return CardBerita(berita: berita.payload![index]);
+                          },
+                        ),
+                      )
+              ],
+            ),
           ),
         ),
       ),
@@ -68,13 +79,7 @@ class CardBerita extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => BacaBerita(
-            e: berita,
-          ),
-        ),
-      ),
+      onTap: () => Navigator.pushNamed(context, BacaBerita.nameRoute, arguments: berita),
       child: Container(
         padding: const EdgeInsets.all(10),
         margin: const EdgeInsets.only(top: 10),
@@ -140,12 +145,16 @@ class SearchField extends ConsumerWidget {
     Debouncer debouncer = Debouncer();
     return Container(
       margin: const EdgeInsets.only(top: 20),
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-            color: const Color(0xff1D1617).withOpacity(0.11),
-            blurRadius: 40,
-            spreadRadius: 0.0)
-      ]),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xff1D1617).withOpacity(0.1),
+            blurRadius: 20,
+            spreadRadius: 0.0,
+            offset: const Offset(0, 2),
+          )
+        ],
+      ),
       child: TextField(
         onChanged: (value) {
           debouncer.run(() {

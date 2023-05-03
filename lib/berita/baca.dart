@@ -9,10 +9,11 @@ class BacaBerita extends StatelessWidget {
   final Payload e;
   const BacaBerita({Key? key, required this.e}) : super(key: key);
 
+  static const nameRoute = '/bacaberita';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffF8F9FD),
       extendBodyBehindAppBar: true,
       body: Container(
         decoration: BoxDecoration(

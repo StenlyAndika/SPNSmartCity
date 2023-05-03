@@ -51,9 +51,11 @@ class ImageCarousel extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
-                  color: const Color(0xff1D1617).withOpacity(0.25),
-                  blurRadius: 5,
-                  spreadRadius: 0.0)
+                color: const Color(0xff1D1617).withOpacity(0.5),
+                blurRadius: 2,
+                spreadRadius: 0.0,
+                offset: const Offset(0, 2),
+              ),
             ],
           ),
           child: Container(
@@ -90,13 +92,8 @@ class ImageCarousel extends StatelessWidget {
                   const SizedBox(height: 10),
                   InkWell(
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => BacaBerita(
-                            e: berita,
-                          ),
-                        ),
-                      );
+                      Navigator.pushNamed(context, BacaBerita.nameRoute,
+                          arguments: berita);
                     },
                     child: Column(
                       children: [
