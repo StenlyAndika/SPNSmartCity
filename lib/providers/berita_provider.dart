@@ -1,23 +1,26 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:smartcity/models/berita_model.dart';
 
+import '../models/berita_model.dart';
 import '../services/api_berita_services.dart';
 
-part 'berita_provider.freezed.dart';
+class BeritaState {
+  final bool isLoading;
+  final BeritaModel beritaModel;
 
-@freezed
-class BeritaState with _$BeritaState {
-  const factory BeritaState({
-    @Default(true) bool isLoading,
-    required BeritaModel beritaModel,
-  }) = _BeritaState;
+  BeritaState({this.isLoading = true, required this.beritaModel});
 
-  const BeritaState._();
+  BeritaState copyWith({bool? isLoading, BeritaModel? beritaModel}) {
+    return BeritaState(
+      isLoading: isLoading ?? this.isLoading,
+      beritaModel: beritaModel ?? this.beritaModel,
+    );
+  }
 }
 
 class BeritaNotifier extends StateNotifier<BeritaState> {
-  BeritaNotifier() : super(BeritaState(beritaModel: BeritaModel(payload: []))) {
+  BeritaNotifier()
+      : super(BeritaState(
+            beritaModel: BeritaModel(payload: []), isLoading: true)) {
     loadBerita();
   }
 
@@ -38,7 +41,8 @@ class BeritaNotifier extends StateNotifier<BeritaState> {
 
 class BeritaCarouselNotifier extends StateNotifier<BeritaState> {
   BeritaCarouselNotifier()
-      : super(BeritaState(beritaModel: BeritaModel(payload: []))) {
+      : super(BeritaState(
+            beritaModel: BeritaModel(payload: []), isLoading: true)) {
     loadCarouselBerita();
   }
 

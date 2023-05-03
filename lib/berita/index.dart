@@ -1,20 +1,39 @@
+import 'dart:math';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:smartcity/berita/berita.dart';
 
 import '../models/berita_model.dart';
 import '../providers/berita_provider.dart';
 import '../widgets/image_carousel.dart';
+import 'berita.dart';
 
 class HomePage extends ConsumerWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
+
+  final List<IconData> icons = [
+    Icons.newspaper,
+    Icons.schedule,
+    Icons.favorite,
+    Icons.money,
+    Icons.store,
+    Icons.person,
+  ];
+
+  final List<String> layanan = [
+    'Berita',
+    'Event Bulanan',
+    'Lowongan Kerja',
+    'Pinjol',
+    'Jajanan Kota',
+    'Orang Hilang'
+  ];
 
   @override
   Widget build(BuildContext context, ref) {
     BeritaModel berita = ref.watch(beritaCarouselProvider).beritaModel;
     bool isLoading = ref.watch(beritaCarouselProvider).isLoading;
-
     return Scaffold(
       backgroundColor: const Color(0xffF8F9FD),
       extendBodyBehindAppBar: true,
@@ -23,14 +42,6 @@ class HomePage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Selamat datang',
-              style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 5),
             Text(
               'Sungai Penuh',
               style: Theme.of(context)
@@ -75,7 +86,12 @@ class HomePage extends ConsumerWidget {
             ),
             const SizedBox(height: 10),
             isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? SizedBox(
+                    height: MediaQuery.of(context).size.height / 2,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
                 : CarouselSlider.builder(
                     itemCount: berita.payload!.length,
                     itemBuilder:
@@ -111,7 +127,7 @@ class HomePage extends ConsumerWidget {
               child: GridView.count(
                 crossAxisCount: 3,
                 children: List.generate(
-                  berita.payload!.length,
+                  icons.length,
                   (index) {
                     return InkWell(
                       onTap: () {},
@@ -120,9 +136,6 @@ class HomePage extends ConsumerWidget {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(15),
-                          image: const DecorationImage(
-                            image: AssetImage("img/avatar.png"),
-                          ),
                           boxShadow: [
                             BoxShadow(
                                 color:
@@ -131,10 +144,24 @@ class HomePage extends ConsumerWidget {
                                 spreadRadius: 0.0)
                           ],
                         ),
-                        child: Column(
-                          children: [
-                            Text(berita.payload![index].nama.toString()),
-                          ],
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            children: [
+                              Icon(
+                                icons[index],
+                                size: 44,
+                                color: Colors.blue.shade300,
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                layanan[index],
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     );
