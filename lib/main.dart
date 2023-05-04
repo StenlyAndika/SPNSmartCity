@@ -24,10 +24,10 @@ class MyApp extends StatelessWidget {
           },
         ),
       ),
-      initialRoute: Home.nameRoute,
+      initialRoute: MainApp.nameRoute,
       routes: {
         Berita.nameRoute: (context) => const Berita(),
-        Home.nameRoute: (context) => const Home(),
+        MainApp.nameRoute: (context) => const MainApp(),
         BacaBerita.nameRoute: (context) => BacaBerita(
             e: ModalRoute.of(context)?.settings.arguments as Payload),
       },

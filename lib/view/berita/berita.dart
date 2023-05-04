@@ -1,15 +1,14 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../models/berita_model.dart';
-import '../../providers/berita_provider.dart';
-import '../../widgets/image_carousel.dart';
+import '../../models/berita_page_model.dart';
+import '../../providers/berita_page_provider.dart';
 import '../../widgets/reusable_widgets.dart';
+import '../../widgets/skeleton.dart';
 import 'baca.dart';
 
 class Berita extends ConsumerWidget {
@@ -19,12 +18,8 @@ class Berita extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    BeritaModel berita = ref.watch(beritaProvider).beritaModel;
-    bool isLoading = ref.watch(beritaProvider).isLoading;
-
-    BeritaModel beritaCarousel = ref.watch(beritaCarouselProvider).beritaModel;
-    bool isCarouselLoading = ref.watch(beritaCarouselProvider).isLoading;
-
+    BeritaPageModel berita = ref.watch(beritaPageProvider).beritaModelPage;
+    bool isLoading = ref.watch(beritaPageProvider).isLoading;
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -56,39 +51,11 @@ class Berita extends ConsumerWidget {
                       .copyWith(fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 10),
-                isCarouselLoading
-                    ? const ImageCarouselSkeleton()
-                    : CarouselSlider.builder(
-                        itemCount: beritaCarousel.payload!.length,
-                        itemBuilder: (BuildContext context, int index,
-                            int pageViewIndex) {
-                          return ImageCarousel(
-                            borderRadius: 10,
-                            width: double.infinity,
-                            height: double.infinity,
-                            imageUrl:
-                                "http://sungaipenuhkota.go.id/storage/${beritaCarousel.payload![index].gambar}",
-                            timepass:
-                                '${DateTime.parse(beritaCarousel.payload![index].createdAt.toString()).day.toString().padLeft(2, '0')}-${DateTime.parse(beritaCarousel.payload![index].createdAt.toString()).month.toString().padLeft(2, '0')}-${DateTime.parse(beritaCarousel.payload![index].createdAt.toString()).year}',
-                            berita: beritaCarousel.payload![index],
-                            judul:
-                                beritaCarousel.payload![index].judul.toString(),
-                          );
-                        },
-                        options: CarouselOptions(
-                          height: 200,
-                          autoPlay: true,
-                          enlargeCenterPage: true,
-                          scrollDirection: Axis.vertical,
-                          viewportFraction: 1.0,
-                        ),
-                      ),
-                const SizedBox(height: 10),
                 const SearchField(),
                 isLoading
                     ? Expanded(
                         child: ListView.builder(
-                          itemCount: 3,
+                          itemCount: 5,
                           shrinkWrap: true,
                           itemBuilder: (BuildContext context, int index) {
                             return const CardBeritaSkeleton();
@@ -97,10 +64,11 @@ class Berita extends ConsumerWidget {
                       )
                     : Expanded(
                         child: ListView.builder(
-                          itemCount: berita.payload!.length,
+                          itemCount: berita.payload!.data!.length,
                           shrinkWrap: true,
                           itemBuilder: (BuildContext context, int index) {
-                            return CardBerita(berita: berita.payload![index]);
+                            return CardBerita(
+                                berita: berita.payload!.data![index]);
                           },
                         ),
                       )
@@ -248,39 +216,16 @@ class ImageCarouselSkeleton extends StatelessWidget {
   }
 }
 
-class Skeleton extends StatelessWidget {
-  const Skeleton({
-    Key? key,
-    this.height,
-    this.width,
-  }) : super(key: key);
-
-  final double? height, width;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(
-          Radius.circular(10),
-        ),
-      ),
-    );
-  }
-}
-
 class CardBerita extends StatelessWidget {
-  final Payload berita;
+  final dynamic berita;
   const CardBerita({Key? key, required this.berita}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () =>
-          Navigator.pushNamed(context, BacaBerita.nameRoute, arguments: berita),
+      onTap: () {
+        // Navigator.pushNamed(context, BacaBerita.nameRoute, arguments: berita);
+      },
       child: Container(
         padding: const EdgeInsets.all(10),
         margin: const EdgeInsets.only(top: 10),
@@ -361,9 +306,9 @@ class SearchField extends ConsumerWidget {
       onChanged: (value) {
         debouncer.run(() {
           if (value.isNotEmpty) {
-            ref.read(beritaProvider.notifier).loadSearchedBerita(value);
+            ref.read(beritaPageProvider.notifier).loadSearchedBerita(value);
           } else {
-            ref.read(beritaProvider.notifier).loadBerita();
+            ref.read(beritaPageProvider.notifier).loadBerita();
           }
         });
       },

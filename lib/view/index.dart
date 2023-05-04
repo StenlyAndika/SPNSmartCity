@@ -1,13 +1,20 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/berita_model.dart';
+import '../providers/berita_provider.dart';
+import '../widgets/image_carousel.dart';
 import 'berita/berita.dart';
 
-class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+class MainApp extends ConsumerWidget {
+  const MainApp({Key? key}) : super(key: key);
 
   static const nameRoute = '/';
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    BeritaModel beritaCarousel = ref.watch(beritaCarouselProvider).beritaModel;
+    bool isCarouselLoading = ref.watch(beritaCarouselProvider).isLoading;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -21,46 +28,86 @@ class Home extends StatelessWidget {
           ),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(
-              height: 110,
+              height: 80,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.05,
+                right: MediaQuery.of(context).size.width * 0.05,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Sungai Penuh",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineMedium!
-                            .copyWith(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700),
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        "Smart Service",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall!
-                            .copyWith(
-                                color: const Color(0xff6DA9E4),
-                                fontWeight: FontWeight.w500),
-                      ),
-                    ],
+                  Text(
+                    "Sungai Penuh",
+                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                        color: Colors.black, fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  Text(
+                    "Smart Service",
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        color: const Color(0xff6DA9E4),
+                        fontWeight: FontWeight.w500),
                   ),
                 ],
               ),
             ),
-            const SizedBox(
-              height: 40,
+            isCarouselLoading
+                ? const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: ImageCarouselSkeleton(),
+                  )
+                : Padding(
+                    padding: EdgeInsets.all(
+                        MediaQuery.of(context).size.width * 0.05),
+                    child: CarouselSlider.builder(
+                      itemCount: beritaCarousel.payload!.length,
+                      itemBuilder:
+                          (BuildContext context, int index, int pageViewIndex) {
+                        return ImageCarousel(
+                          borderRadius: 10,
+                          width: double.infinity,
+                          height: double.infinity,
+                          imageUrl:
+                              "http://sungaipenuhkota.go.id/storage/${beritaCarousel.payload![index].gambar}",
+                          timepass:
+                              '${DateTime.parse(beritaCarousel.payload![index].createdAt.toString()).day.toString().padLeft(2, '0')}-${DateTime.parse(beritaCarousel.payload![index].createdAt.toString()).month.toString().padLeft(2, '0')}-${DateTime.parse(beritaCarousel.payload![index].createdAt.toString()).year}',
+                          berita: beritaCarousel.payload![index],
+                          judul:
+                              beritaCarousel.payload![index].judul.toString(),
+                        );
+                      },
+                      options: CarouselOptions(
+                        height: 200,
+                        autoPlay: true,
+                        enlargeCenterPage: true,
+                        scrollDirection: Axis.vertical,
+                        viewportFraction: 1.0,
+                      ),
+                    ),
+                  ),
+            Padding(
+              padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width * 0.05,
+                  right: MediaQuery.of(context).size.width * 0.05,
+                  bottom: MediaQuery.of(context).size.width * 0.05),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Katalog Layanan",
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        color: const Color(0xff6DA9E4),
+                        fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
             ),
             const GridDashboard()
           ],
@@ -78,58 +125,49 @@ class GridDashboard extends StatefulWidget {
 }
 
 class _GridDashboardState extends State<GridDashboard> {
-  Items item1 = Items(
-      title: "Berita",
-      subtitle: "Hari ini",
-      event: Berita.nameRoute,
-      img: "assets/calendar.png");
-
-  Items item2 = Items(
-    title: "Groceries",
-    subtitle: "Bocali, Apple",
-    event: "4 Items",
-    img: "assets/food.png",
-  );
-
-  Items item3 = Items(
-    title: "Locations",
-    subtitle: "Lucy Mao going to Office",
-    event: "",
-    img: "assets/map.png",
-  );
-
-  Items item4 = Items(
-    title: "Activity",
-    subtitle: "Rose favirited your Post",
-    event: "",
-    img: "assets/festival.png",
-  );
-
-  Items item5 = Items(
-    title: "To do",
-    subtitle: "Homework, Design",
-    event: "4 Items",
-    img: "assets/todo.png",
-  );
-
-  Items item6 = Items(
-    title: "Settings",
-    subtitle: "",
-    event: "2 Items",
-    img: "assets/setting.png",
-  );
+  List<Items> item = [
+    Items(
+        icon: Icons.newspaper,
+        title: "Berita",
+        subtitle: "Hari ini",
+        event: Berita.nameRoute),
+    Items(
+        icon: Icons.food_bank_outlined,
+        title: "Jajanan",
+        subtitle: "Onde Onde Tempe",
+        event: ""),
+    Items(
+        icon: Icons.location_on_outlined,
+        title: "Wisata",
+        subtitle: "Cek lokasi wisata terbaru",
+        event: ""),
+    Items(
+        icon: Icons.attach_money,
+        title: "E-Riba",
+        subtitle: "Pinjol Gacor",
+        event: ""),
+    Items(
+        icon: Icons.work_history,
+        title: "List Aktivitas",
+        subtitle: "Mancing, Berenang, Tenggelam",
+        event: ""),
+    Items(
+        icon: Icons.settings,
+        title: "Pengaturan",
+        subtitle: "Pengaturan aplikasi",
+        event: "")
+  ];
 
   @override
   Widget build(BuildContext context) {
-    List<Items> myList = [item1, item2, item3, item4, item5, item6];
     return Flexible(
       child: GridView.count(
           childAspectRatio: 1.0,
-          padding: const EdgeInsets.only(left: 16, right: 16),
+          padding: const EdgeInsets.only(left: 20, right: 20),
           crossAxisCount: 3,
           crossAxisSpacing: 15,
           mainAxisSpacing: 15,
-          children: myList.map((data) {
+          children: item.map((data) {
             return InkWell(
               onTap: (() {
                 Navigator.of(context).pushNamed(data.event);
@@ -150,13 +188,8 @@ class _GridDashboardState extends State<GridDashboard> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      data.img,
-                      width: 42,
-                    ),
-                    const SizedBox(
-                      height: 14,
-                    ),
+                    Icon(data.icon, size: 42),
+                    const SizedBox(height: 5),
                     Text(
                       data.title,
                       style: const TextStyle(
@@ -164,9 +197,7 @@ class _GridDashboardState extends State<GridDashboard> {
                           fontSize: 16,
                           fontWeight: FontWeight.w600),
                     ),
-                    const SizedBox(
-                      height: 8,
-                    ),
+                    const SizedBox(height: 5),
                     Text(
                       data.subtitle,
                       textAlign: TextAlign.center,
@@ -185,13 +216,13 @@ class _GridDashboardState extends State<GridDashboard> {
 }
 
 class Items {
+  IconData? icon;
   String title;
   String subtitle;
   String event;
-  String img;
   Items(
-      {required this.title,
+      {required this.icon,
+      required this.title,
       required this.subtitle,
-      required this.event,
-      required this.img});
+      required this.event});
 }

@@ -1,7 +1,8 @@
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:http/http.dart' as http;
+import '../constants/constants.dart';
 import '../models/berita_model.dart';
-import '../services/api_berita_services.dart';
 
 class BeritaState {
   final bool isLoading;
@@ -17,28 +18,6 @@ class BeritaState {
   }
 }
 
-class BeritaNotifier extends StateNotifier<BeritaState> {
-  BeritaNotifier()
-      : super(BeritaState(
-            beritaModel: BeritaModel(payload: []), isLoading: true)) {
-    loadBerita();
-  }
-
-  loadBerita() async {
-    state = state.copyWith(isLoading: true);
-    final beritaResponse = await ApiBeritaService().allBerita();
-    final berita = BeritaModel.fromJson(beritaResponse);
-    state = state.copyWith(beritaModel: berita, isLoading: false);
-  }
-
-  loadSearchedBerita(String title) async {
-    state = state.copyWith(isLoading: true);
-    final beritaResponse = await ApiBeritaService().beritaSearch(title);
-    final berita = BeritaModel.fromJson(beritaResponse);
-    state = state.copyWith(beritaModel: berita, isLoading: false);
-  }
-}
-
 class BeritaCarouselNotifier extends StateNotifier<BeritaState> {
   BeritaCarouselNotifier()
       : super(BeritaState(
@@ -48,15 +27,17 @@ class BeritaCarouselNotifier extends StateNotifier<BeritaState> {
 
   loadCarouselBerita() async {
     state = state.copyWith(isLoading: true);
-    final beritaResponse = await ApiBeritaService().carouselBerita();
-    final berita = BeritaModel.fromJson(beritaResponse);
-    state = state.copyWith(beritaModel: berita, isLoading: false);
+    final response =
+        await http.get(Uri.parse('${ApiUrls.beritaUrl}berita/carousel'));
+    if (response.statusCode == 200) {
+      final berita = BeritaModel.fromJson(jsonDecode(response.body));
+      state = state.copyWith(beritaModel: berita, isLoading: false);
+    } else {
+      throw Exception('Failed to load all berita');
+    }
   }
 }
 
-final beritaProvider =
-    StateNotifierProvider.autoDispose<BeritaNotifier, BeritaState>(
-        (ref) => BeritaNotifier());
 final beritaCarouselProvider =
     StateNotifierProvider<BeritaCarouselNotifier, BeritaState>(
         (ref) => BeritaCarouselNotifier());
