@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../models/berita_model.dart';
-import '../widgets/custom_tag.dart';
-import '../widgets/reusable_widgets.dart';
+import '../../models/berita_model.dart';
+import '../../widgets/custom_tag.dart';
+import '../../widgets/reusable_widgets.dart';
 
 class BacaBerita extends StatelessWidget {
   final Payload e;

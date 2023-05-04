@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../berita/baca.dart';
+import '../view/berita/baca.dart';
 import 'custom_tag.dart';
 
 class ImageCarousel extends StatelessWidget {
   const ImageCarousel({
     Key? key,
-    this.height = 125,
-    this.borderRadius = 20,
+    required this.height,
+    required this.borderRadius,
     required this.width,
     required this.imageUrl,
     this.padding,
@@ -30,46 +30,39 @@ class ImageCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      imageBuilder: (context, imageProvider) {
-        return Container(
-          height: height,
-          width: width,
-          margin: margin,
-          padding: padding,
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(10.0),
-              bottomLeft: Radius.circular(10.0),
-              bottomRight: Radius.circular(10.0),
-              topRight: Radius.circular(10.0),
-            ),
-            image: DecorationImage(
-              image: NetworkImage(imageUrl),
-              fit: BoxFit.cover,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xff1D1617).withOpacity(0.5),
-                blurRadius: 2,
-                spreadRadius: 0.0,
-                offset: const Offset(0, 2),
-              ),
-            ],
+    return Container(
+      height: height,
+      width: width,
+      margin: margin,
+      padding: padding,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xff1D1617).withOpacity(0.1),
+            blurRadius: 2,
+            spreadRadius: 0.0,
+            offset: const Offset(0, 2),
           ),
-          child: Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10.0),
-                bottomLeft: Radius.circular(10.0),
-                bottomRight: Radius.circular(10.0),
-                topRight: Radius.circular(10.0),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                fit: BoxFit.cover,
               ),
+            ),
+          ),
+          Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
               gradient: LinearGradient(
                   begin: Alignment.center,
                   end: Alignment.bottomCenter,
-                  colors: [Colors.transparent, Colors.black87]),
+                  colors: [Colors.transparent, Colors.black54]),
             ),
             child: Padding(
               padding: const EdgeInsets.all(10),
@@ -140,8 +133,8 @@ class ImageCarousel extends StatelessWidget {
               ),
             ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }
