@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smartcity/view/berita/baca.dart';
 import 'package:smartcity/view/berita/berita.dart';
 import 'package:smartcity/view/index.dart';
-import 'models/berita_model.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
         Berita.nameRoute: (context) => const Berita(),
         MainApp.nameRoute: (context) => const MainApp(),
         BacaBerita.nameRoute: (context) => BacaBerita(
-            e: ModalRoute.of(context)?.settings.arguments as Payload),
+            e: ModalRoute.of(context)?.settings.arguments as dynamic),
       },
     );
   }

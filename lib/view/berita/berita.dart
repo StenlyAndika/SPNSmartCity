@@ -224,7 +224,7 @@ class CardBerita extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Navigator.pushNamed(context, BacaBerita.nameRoute, arguments: berita);
+        Navigator.pushNamed(context, BacaBerita.nameRoute, arguments: berita);
       },
       child: Container(
         padding: const EdgeInsets.all(10),

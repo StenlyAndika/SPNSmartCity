@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../models/berita_model.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/reusable_widgets.dart';
 
 class BacaBerita extends StatelessWidget {
-  final Payload e;
+  final dynamic e;
   const BacaBerita({Key? key, required this.e}) : super(key: key);
 
   static const nameRoute = '/bacaberita';
@@ -49,7 +48,7 @@ class NewsBody extends StatelessWidget {
     required this.e,
   }) : super(key: key);
 
-  final Payload e;
+  final dynamic e;
 
   @override
   Widget build(BuildContext context) {
