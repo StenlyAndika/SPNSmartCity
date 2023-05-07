@@ -11,15 +11,37 @@ import '../../widgets/reusable_widgets.dart';
 import '../../widgets/skeleton.dart';
 import 'baca.dart';
 
-class Berita extends ConsumerWidget {
+class Berita extends ConsumerStatefulWidget {
   const Berita({Key? key}) : super(key: key);
 
   static const nameRoute = '/berita';
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _BeritaState();
+}
+
+class _BeritaState extends ConsumerState<Berita> {
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent ==
+          scrollController.offset) {
+        final state = ref.watch(beritaPageProvider);
+        if (!state.isLoading) {
+          ref.read(beritaPageProvider.notifier).loadMoreBerita(state.page);
+        }
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     BeritaPageModel berita = ref.watch(beritaPageProvider).beritaModelPage;
-    bool isLoading = ref.watch(beritaPageProvider).isLoading;
+    final state = ref.watch(beritaPageProvider);
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -52,7 +74,7 @@ class Berita extends ConsumerWidget {
                 ),
                 const SizedBox(height: 10),
                 const SearchField(),
-                isLoading
+                state.isLoading
                     ? Expanded(
                         child: ListView.builder(
                           itemCount: 5,
@@ -64,9 +86,22 @@ class Berita extends ConsumerWidget {
                       )
                     : Expanded(
                         child: ListView.builder(
-                          itemCount: berita.payload!.data!.length,
+                          controller: scrollController,
+                          itemCount: berita.payload!.data!.length + 1,
                           shrinkWrap: true,
                           itemBuilder: (BuildContext context, int index) {
+                            if (index == berita.payload!.data!.length) {
+                              if (state.hasMoreData) {
+                                return const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 32),
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              } else {
+                                return const SizedBox.shrink();
+                              }
+                            }
                             return CardBerita(
                                 berita: berita.payload!.data![index]);
                           },
