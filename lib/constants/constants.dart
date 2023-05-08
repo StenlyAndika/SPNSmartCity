@@ -1,3 +1,3 @@
 class ApiUrls {
-  static const String beritaUrl = 'https://sungaipenuhkota.go.id/api/';
+  static const String spnUrl = 'https://sungaipenuhkota.go.id/api/';
 }

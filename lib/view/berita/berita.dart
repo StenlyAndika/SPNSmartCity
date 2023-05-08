@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../models/berita/model_data.dart';
-import '../../providers/berita/pagination.dart';
+import '../../providers/berita/berita.dart';
 import '../../widgets/reusable_widgets.dart';
 import '../../widgets/skeleton.dart';
 import 'baca.dart';
@@ -40,7 +40,7 @@ class _BeritaState extends ConsumerState<Berita> {
 
   @override
   Widget build(BuildContext context) {
-    BeritaModel berita = ref.watch(beritaPageProvider).beritaModel;
+    BeritaModel berita = ref.watch(beritaPageProvider).modelBerita;
     final state = ref.watch(beritaPageProvider);
     return Scaffold(
       body: SafeArea(
@@ -254,7 +254,7 @@ class ImageCarouselSkeleton extends StatelessWidget {
 }
 
 class CardBerita extends StatelessWidget {
-  final dynamic berita;
+  final Data berita;
   const CardBerita({Key? key, required this.berita}) : super(key: key);
 
   @override

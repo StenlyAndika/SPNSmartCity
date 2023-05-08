@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/berita/model_data.dart';
-import '../providers/berita/pagination.dart';
+import '../providers/berita/berita.dart';
 import '../widgets/image_carousel.dart';
 import 'berita/berita.dart';
+import 'pesan/pesan.dart';
 
 class MainApp extends ConsumerWidget {
   const MainApp({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class MainApp extends ConsumerWidget {
   static const nameRoute = '/';
   @override
   Widget build(BuildContext context, ref) {
-    BeritaModel beritaCarousel = ref.watch(beritaCarouselProvider).beritaModel;
+    BeritaModel beritaCarousel = ref.watch(beritaCarouselProvider).modelBerita;
     bool isCarouselLoading = ref.watch(beritaCarouselProvider).isLoading;
     return Scaffold(
       body: Container(
@@ -79,8 +80,8 @@ class MainApp extends ConsumerWidget {
                           timepass:
                               '${DateTime.parse(beritaCarousel.payload!.data![index].createdAt.toString()).day.toString().padLeft(2, '0')}-${DateTime.parse(beritaCarousel.payload!.data![index].createdAt.toString()).month.toString().padLeft(2, '0')}-${DateTime.parse(beritaCarousel.payload!.data![index].createdAt.toString()).year}',
                           berita: beritaCarousel.payload!.data![index],
-                          judul:
-                              beritaCarousel.payload!.data![index].judul.toString(),
+                          judul: beritaCarousel.payload!.data![index].judul
+                              .toString(),
                         );
                       },
                       options: CarouselOptions(
@@ -132,6 +133,11 @@ class _GridDashboardState extends State<GridDashboard> {
         subtitle: "Hari ini",
         event: Berita.nameRoute),
     Items(
+        icon: Icons.message,
+        title: "Kotak Masuk",
+        subtitle: "Pesan dari warga sekitar",
+        event: Pesan.nameRoute),
+    Items(
         icon: Icons.food_bank_outlined,
         title: "Jajanan",
         subtitle: "Onde Onde Tempe",
@@ -140,11 +146,6 @@ class _GridDashboardState extends State<GridDashboard> {
         icon: Icons.location_on_outlined,
         title: "Wisata",
         subtitle: "Cek lokasi wisata terbaru",
-        event: ""),
-    Items(
-        icon: Icons.attach_money,
-        title: "E-Riba",
-        subtitle: "Pinjol Gacor",
         event: ""),
     Items(
         icon: Icons.work_history,
