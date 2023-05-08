@@ -224,27 +224,39 @@ class CardPesan extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  const Divider(
+                    height: 5,
+                    thickness: 2,
+                    // endIndent: 250,
+                    color: Colors.black26,
+                  ),
                   Text(
-                    pesan.email.toString(),
+                    'Email        : ${pesan.email.toString()}',
                     style: const TextStyle(
-                      color: Colors.black,
+                      color: Colors.black54,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    pesan.wa.toString(),
+                    'No hp/wa : ${pesan.wa.toString()}',
                     style: const TextStyle(
-                      color: Colors.black,
+                      color: Colors.black54,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  const Divider(
+                    height: 5,
+                    thickness: 2,
+                    color: Colors.black26,
+                  ),
+                  const SizedBox(height: 5),
                   Text(
                     pesan.pesan
                         .toString()
                         .replaceAll(RegExp(r'<[^>]*>|&nbsp;'), '')
                         .replaceAll('&quot;', '"'),
                     style: const TextStyle(
-                      color: Colors.black,
+                      color: Colors.black54,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
