@@ -2,8 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/berita_model.dart';
-import '../providers/berita_provider.dart';
+import '../models/berita/model_data.dart';
+import '../providers/berita/pagination.dart';
 import '../widgets/image_carousel.dart';
 import 'berita/berita.dart';
 
@@ -67,7 +67,7 @@ class MainApp extends ConsumerWidget {
                     padding: EdgeInsets.all(
                         MediaQuery.of(context).size.width * 0.05),
                     child: CarouselSlider.builder(
-                      itemCount: beritaCarousel.payload!.length,
+                      itemCount: beritaCarousel.payload!.data!.length,
                       itemBuilder:
                           (BuildContext context, int index, int pageViewIndex) {
                         return ImageCarousel(
@@ -75,12 +75,12 @@ class MainApp extends ConsumerWidget {
                           width: double.infinity,
                           height: double.infinity,
                           imageUrl:
-                              "http://sungaipenuhkota.go.id/storage/${beritaCarousel.payload![index].gambar}",
+                              "http://sungaipenuhkota.go.id/storage/${beritaCarousel.payload!.data![index].gambar}",
                           timepass:
-                              '${DateTime.parse(beritaCarousel.payload![index].createdAt.toString()).day.toString().padLeft(2, '0')}-${DateTime.parse(beritaCarousel.payload![index].createdAt.toString()).month.toString().padLeft(2, '0')}-${DateTime.parse(beritaCarousel.payload![index].createdAt.toString()).year}',
-                          berita: beritaCarousel.payload![index],
+                              '${DateTime.parse(beritaCarousel.payload!.data![index].createdAt.toString()).day.toString().padLeft(2, '0')}-${DateTime.parse(beritaCarousel.payload!.data![index].createdAt.toString()).month.toString().padLeft(2, '0')}-${DateTime.parse(beritaCarousel.payload!.data![index].createdAt.toString()).year}',
+                          berita: beritaCarousel.payload!.data![index],
                           judul:
-                              beritaCarousel.payload![index].judul.toString(),
+                              beritaCarousel.payload!.data![index].judul.toString(),
                         );
                       },
                       options: CarouselOptions(

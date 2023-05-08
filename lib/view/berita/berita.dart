@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../models/berita_page_model.dart';
-import '../../providers/berita_page_provider.dart';
+import '../../models/berita/model_data.dart';
+import '../../providers/berita/pagination.dart';
 import '../../widgets/reusable_widgets.dart';
 import '../../widgets/skeleton.dart';
 import 'baca.dart';
@@ -32,7 +32,7 @@ class _BeritaState extends ConsumerState<Berita> {
           scrollController.offset) {
         final state = ref.watch(beritaPageProvider);
         if (!state.isLoading) {
-          ref.read(beritaPageProvider.notifier).loadMoreBerita(state.page);
+          ref.read(beritaPageProvider.notifier).loadMoreBerita();
         }
       }
     });
@@ -40,7 +40,7 @@ class _BeritaState extends ConsumerState<Berita> {
 
   @override
   Widget build(BuildContext context) {
-    BeritaPageModel berita = ref.watch(beritaPageProvider).beritaModelPage;
+    BeritaModel berita = ref.watch(beritaPageProvider).beritaModel;
     final state = ref.watch(beritaPageProvider);
     return Scaffold(
       body: SafeArea(
@@ -56,7 +56,8 @@ class _BeritaState extends ConsumerState<Berita> {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+            padding:
+                const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -74,6 +75,7 @@ class _BeritaState extends ConsumerState<Berita> {
                 ),
                 const SizedBox(height: 10),
                 const SearchField(),
+                const SizedBox(height: 10),
                 state.isLoading
                     ? Expanded(
                         child: ListView.builder(
@@ -91,7 +93,7 @@ class _BeritaState extends ConsumerState<Berita> {
                           shrinkWrap: true,
                           itemBuilder: (BuildContext context, int index) {
                             if (index == berita.payload!.data!.length) {
-                              if (state.hasMoreData) {
+                              if (state.hasMoreData!) {
                                 return const Padding(
                                   padding: EdgeInsets.symmetric(vertical: 32),
                                   child: Center(
@@ -350,7 +352,7 @@ class SearchField extends ConsumerWidget {
       decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
-          contentPadding: const EdgeInsets.all(15),
+          contentPadding: const EdgeInsets.all(20),
           hintText: 'Cari Berita',
           hintStyle: const TextStyle(color: Color(0xffDDDADA), fontSize: 14),
           prefixIcon: const Icon(Icons.search),

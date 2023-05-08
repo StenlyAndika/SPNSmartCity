@@ -1,19 +1,15 @@
 class BeritaModel {
   int? code;
   String? message;
-  List<Payload>? payload;
+  Payload? payload;
 
   BeritaModel({this.code, this.message, this.payload});
 
   BeritaModel.fromJson(Map<String, dynamic> json) {
     code = json['code'];
     message = json['message'];
-    if (json['payload'] != null) {
-      payload = <Payload>[];
-      json['payload'].forEach((v) {
-        payload!.add(Payload.fromJson(v));
-      });
-    }
+    payload =
+        json['payload'] != null ? Payload.fromJson(json['payload']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -21,13 +17,36 @@ class BeritaModel {
     data['code'] = code;
     data['message'] = message;
     if (payload != null) {
-      data['payload'] = payload!.map((v) => v.toJson()).toList();
+      data['payload'] = payload!.toJson();
     }
     return data;
   }
 }
 
 class Payload {
+  List<Data>? data;
+
+  Payload({this.data});
+
+  Payload.fromJson(Map<String, dynamic> json) {
+    if (json['data'] != null) {
+      data = <Data>[];
+      json['data'].forEach((v) {
+        data!.add(Data.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Data {
   int? id;
   String? judul;
   String? isi;
@@ -37,7 +56,7 @@ class Payload {
   String? createdAt;
   String? updatedAt;
 
-  Payload(
+  Data(
       {this.id,
       this.judul,
       this.isi,
@@ -47,7 +66,7 @@ class Payload {
       this.createdAt,
       this.updatedAt});
 
-  Payload.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     judul = json['judul'];
     isi = json['isi'];
