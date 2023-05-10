@@ -170,9 +170,7 @@ class _GridDashboardState extends State<GridDashboard> {
           mainAxisSpacing: 15,
           children: item.map((data) {
             return InkWell(
-              onTap: (() {
-                Navigator.of(context).pushNamed(data.event);
-              }),
+              onTap: () => Navigator.of(context).pushNamed(data.event),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -181,8 +179,8 @@ class _GridDashboardState extends State<GridDashboard> {
                     BoxShadow(
                       color: const Color(0xff1D1617).withOpacity(0.1),
                       blurRadius: 2,
-                      spreadRadius: 0.0,
-                      offset: const Offset(0, 2),
+                      spreadRadius: 0,
+                      offset: const Offset(3, 3),
                     ),
                   ],
                 ),

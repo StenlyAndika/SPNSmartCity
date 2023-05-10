@@ -1,5 +1,6 @@
+import 'package:flutter/material.dart';
+
 class ReusableWidgets {
-  
   // ignore: non_constant_identifier_names
   static String time_passed(DateTime datetime, {bool full = true}) {
     DateTime now = DateTime.now();
@@ -50,5 +51,38 @@ class ReusableWidgets {
     } else {
       return str.isNotEmpty ? "${tlist[0]} yang lalu" : "Baru Saja";
     }
+  }
+
+  static alertNotification(BuildContext context, String? txt, IconData n) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 1500),
+          child: AlertDialog(
+            elevation: 0,
+            backgroundColor: Colors.white.withOpacity(0.9),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(20.0),
+              ),
+            ),
+            title: Icon(
+              n,
+              size: 40,
+              color: Colors.blue,
+            ),
+            content: Text(
+              txt!,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }

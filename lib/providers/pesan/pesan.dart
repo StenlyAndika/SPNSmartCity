@@ -19,10 +19,7 @@ class PesanState {
   });
 
   PesanState copyWith(
-      {bool? isLoading,
-      PesanModel? modelPesan,
-      int? page,
-      bool? hasMoreData}) {
+      {bool? isLoading, PesanModel? modelPesan, int? page, bool? hasMoreData}) {
     return PesanState(
       isLoading: isLoading ?? this.isLoading,
       modelPesan: modelPesan ?? this.modelPesan,
@@ -43,7 +40,7 @@ class PesanPageNotifier extends StateNotifier<PesanState> {
 
   loadPesan() async {
     state = state.copyWith(isLoading: true);
-    final response = await http.get(Uri.parse('${ApiUrls.spnUrl}kontak'));
+    final response = await http.get(Uri.parse('${ApiUrls.spnUrl}pesan'));
     if (response.statusCode == 200) {
       final pesan = PesanModel.fromJson(jsonDecode(response.body));
       state = state.copyWith(
@@ -57,17 +54,14 @@ class PesanPageNotifier extends StateNotifier<PesanState> {
     final currentPage = state.page ?? 1;
     final nextPage = currentPage + 1;
     final response =
-        await http.get(Uri.parse('${ApiUrls.spnUrl}kontak?page=$nextPage'));
+        await http.get(Uri.parse('${ApiUrls.spnUrl}pesan?page=$nextPage'));
     if (response.statusCode == 200) {
       final pesan = PesanModel.fromJson(jsonDecode(response.body));
       state = state.copyWith(
         isLoading: false,
         modelPesan: PesanModel(
           payload: Payload(
-            data: [
-              ...?state.modelPesan.payload!.data,
-              ...?pesan.payload!.data
-            ],
+            data: [...?state.modelPesan.payload!.data, ...?pesan.payload!.data],
           ),
         ),
         page: nextPage,
@@ -78,6 +72,22 @@ class PesanPageNotifier extends StateNotifier<PesanState> {
     }
   }
 
+  deletePesan(String id) async {
+    state = state.copyWith(isLoading: true);
+    final response = await http.delete(Uri.parse('${ApiUrls.spnUrl}pesan/$id'));
+    if (response.statusCode == 200) {
+      final response = await http.get(Uri.parse('${ApiUrls.spnUrl}pesan'));
+      if (response.statusCode == 200) {
+        final pesan = PesanModel.fromJson(jsonDecode(response.body));
+        state = state.copyWith(
+          modelPesan: pesan, isLoading: false, page: 1, hasMoreData: true);
+      } else {
+        throw Exception('Failed to load all pesan');
+      }
+    } else {
+      throw Exception('Failed to delete pesan');
+    }
+  }
 }
 
 final pesanProvider =

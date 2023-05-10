@@ -87,26 +87,34 @@ class _BeritaState extends ConsumerState<Berita> {
                         ),
                       )
                     : Expanded(
-                        child: ListView.builder(
-                          controller: scrollController,
-                          itemCount: berita.payload!.data!.length + 1,
-                          shrinkWrap: true,
-                          itemBuilder: (BuildContext context, int index) {
-                            if (index == berita.payload!.data!.length) {
-                              if (state.hasMoreData!) {
-                                return const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 32),
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              } else {
-                                return const SizedBox.shrink();
+                        child: RefreshIndicator(
+                          onRefresh: () => ref
+                              .read(beritaPageProvider.notifier)
+                              .loadBerita(),
+                          child: ListView.builder(
+                            controller: scrollController,
+                            itemCount: berita.payload!.data!.length + 1,
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext context, int index) {
+                              if (index == berita.payload!.data!.length) {
+                                if (state.hasMoreData!) {
+                                  return const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 32),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                } else {
+                                  return const SizedBox.shrink();
+                                }
                               }
-                            }
-                            return CardBerita(
-                                berita: berita.payload!.data![index]);
-                          },
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: CardBerita(
+                                    berita: berita.payload!.data![index]),
+                              );
+                            },
+                          ),
                         ),
                       )
               ],
@@ -265,7 +273,6 @@ class CardBerita extends StatelessWidget {
       },
       child: Container(
         padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.only(top: 10),
         height: 130,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
