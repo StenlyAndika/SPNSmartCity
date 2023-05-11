@@ -91,5 +91,5 @@ class PesanPageNotifier extends StateNotifier<PesanState> {
 }
 
 final pesanProvider =
-    StateNotifierProvider.autoDispose<PesanPageNotifier, PesanState>(
+    StateNotifierProvider<PesanPageNotifier, PesanState>(
         (ref) => PesanPageNotifier());

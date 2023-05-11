@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:smartcity/view/todo/index.dart';
 
 import '../models/berita/model_data.dart';
 import '../providers/berita/berita.dart';
@@ -149,9 +150,9 @@ class _GridDashboardState extends State<GridDashboard> {
         event: ""),
     Items(
         icon: Icons.work_history,
-        title: "List Aktivitas",
+        title: "Daftar Tugas",
         subtitle: "Mancing, Berenang, Tenggelam",
-        event: ""),
+        event: DaftarTugas.nameRoute),
     Items(
         icon: Icons.settings,
         title: "Pengaturan",

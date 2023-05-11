@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:smartcity/view/berita/baca.dart';
 import 'package:smartcity/view/berita/berita.dart';
 import 'package:smartcity/view/index.dart';
 import 'package:smartcity/view/pesan/pesan.dart';
+import 'package:smartcity/view/todo/index.dart';
 
-void main() {
+Future<void> main() async {
+  await Hive.initFlutter();
+  await Hive.openBox('mybox');
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -32,6 +36,7 @@ class MyApp extends StatelessWidget {
         BacaBerita.nameRoute: (context) => BacaBerita(
             e: ModalRoute.of(context)?.settings.arguments as dynamic),
         Pesan.nameRoute: (context) => const Pesan(),
+        DaftarTugas.nameRoute: (context) => const DaftarTugas()
       },
     );
   }

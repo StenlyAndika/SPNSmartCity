@@ -115,7 +115,7 @@ class BeritaCarouselNotifier extends StateNotifier<BeritaState> {
 }
 
 final beritaPageProvider =
-    StateNotifierProvider.autoDispose<BeritaPageNotifier, BeritaState>(
+    StateNotifierProvider<BeritaPageNotifier, BeritaState>(
         (ref) => BeritaPageNotifier());
 
 final beritaCarouselProvider =

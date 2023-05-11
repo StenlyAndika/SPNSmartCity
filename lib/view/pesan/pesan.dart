@@ -200,9 +200,7 @@ class CardPesan extends ConsumerWidget {
         children: [
           SlidableAction(
             onPressed: (e) {
-              ReusableWidgets.alertNotification(
-                  context, "Pesan berhasil dihapus", Icons.done);
-              // ref.read(pesanProvider.notifier).deletePesan(pesan.id.toString());
+              ref.read(pesanProvider.notifier).deletePesan(pesan.id.toString());
             },
             backgroundColor: const Color(0xFFFE4A49),
             borderRadius: const BorderRadius.all(Radius.circular(10)),
