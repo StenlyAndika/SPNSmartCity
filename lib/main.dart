@@ -5,6 +5,7 @@ import 'package:smartcity/view/berita/baca.dart';
 import 'package:smartcity/view/berita/berita.dart';
 import 'package:smartcity/view/index.dart';
 import 'package:smartcity/view/pesan/pesan.dart';
+import 'package:smartcity/view/tetris/board.dart';
 import 'package:smartcity/view/todo/index.dart';
 
 Future<void> main() async {
@@ -36,7 +37,8 @@ class MyApp extends StatelessWidget {
         BacaBerita.nameRoute: (context) => BacaBerita(
             e: ModalRoute.of(context)?.settings.arguments as dynamic),
         Pesan.nameRoute: (context) => const Pesan(),
-        DaftarTugas.nameRoute: (context) => const DaftarTugas()
+        DaftarTugas.nameRoute: (context) => const DaftarTugas(),
+        GameBoard.nameRoute: (context) => const GameBoard()
       },
     );
   }

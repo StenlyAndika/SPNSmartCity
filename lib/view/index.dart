@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:smartcity/view/tetris/board.dart';
 import 'package:smartcity/view/todo/index.dart';
 
 import '../models/berita/model_data.dart';
@@ -154,10 +155,10 @@ class _GridDashboardState extends State<GridDashboard> {
         subtitle: "Mancing, Berenang, Tenggelam",
         event: DaftarTugas.nameRoute),
     Items(
-        icon: Icons.settings,
-        title: "Pengaturan",
-        subtitle: "Pengaturan aplikasi",
-        event: "")
+        icon: Icons.gamepad,
+        title: "Games",
+        subtitle: "Tetris",
+        event: GameBoard.nameRoute),
   ];
 
   @override
