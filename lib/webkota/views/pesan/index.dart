@@ -5,8 +5,9 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../models/pesan/model_pesan.dart';
 import '../../providers/pesan/pesan.dart';
-import '../../widgets/reusable_widgets.dart';
-import '../../widgets/skeleton.dart';
+import '../../../widgets/header.dart';
+import '../../../widgets/reusable_widgets.dart';
+import '../../../widgets/skeleton.dart';
 
 class Pesan extends ConsumerStatefulWidget {
   const Pesan({Key? key}) : super(key: key);
@@ -40,77 +41,67 @@ class _PesanState extends ConsumerState<Pesan> {
     PesanModel pesan = ref.watch(pesanProvider).modelPesan;
     final state = ref.watch(pesanProvider);
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xffE0E7FF),
-                Colors.white,
-              ],
-              begin: FractionalOffset(0.0, 0.4),
-              end: Alignment.topLeft,
+      backgroundColor: const Color.fromARGB(255, 3, 65, 180),
+      body: ListView(
+        children: [
+          const Header(
+              title: 'Pesan',
+              subtitle: "Keluh Kesah Masyarakat Negara Berkembang"),
+          Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: const BoxDecoration(
+              color: Color(0xFFEDECF2),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(35),
+                topRight: Radius.circular(35),
+              ),
             ),
-          ),
-          child: Padding(
-            padding:
-                const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Pesan Masuk',
-                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                      color: Colors.black, fontWeight: FontWeight.w900),
-                ),
-                Text(
-                  'Keluh kesah masyarakat masa kini',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .copyWith(fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 10),
-                state.isLoading
-                    ? Expanded(
-                        child: ListView.builder(
-                          itemCount: 5,
-                          shrinkWrap: true,
-                          itemBuilder: (BuildContext context, int index) {
-                            return const CardPesanSkeleton();
-                          },
-                        ),
-                      )
-                    : Expanded(
-                        child: ListView.builder(
-                          controller: scrollController,
-                          itemCount: pesan.payload!.data!.length + 1,
-                          shrinkWrap: true,
-                          itemBuilder: (BuildContext context, int index) {
-                            if (index == pesan.payload!.data!.length) {
-                              if (state.hasMoreData!) {
-                                return const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 32),
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              } else {
-                                return const SizedBox.shrink();
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, top: 20, right: 20, bottom: 110),
+              child: Column(
+                children: [
+                  state.isLoading
+                      ? Expanded(
+                          child: ListView.builder(
+                            itemCount: 5,
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext context, int index) {
+                              return const CardPesanSkeleton();
+                            },
+                          ),
+                        )
+                      : Expanded(
+                          child: ListView.builder(
+                            controller: scrollController,
+                            itemCount: pesan.payload!.data!.length + 1,
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext context, int index) {
+                              if (index == pesan.payload!.data!.length) {
+                                if (state.hasMoreData!) {
+                                  return const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 32),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                } else {
+                                  return const SizedBox.shrink();
+                                }
                               }
-                            }
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child:
-                                  CardPesan(pesan: pesan.payload!.data![index]),
-                            );
-                          },
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: CardPesan(
+                                    pesan: pesan.payload!.data![index]),
+                              );
+                            },
+                          ),
                         ),
-                      )
-              ],
+                ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

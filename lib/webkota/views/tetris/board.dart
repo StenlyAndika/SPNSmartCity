@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:smartcity/view/tetris/piece.dart';
-import 'package:smartcity/view/tetris/pixel.dart';
-import 'package:smartcity/view/tetris/values.dart';
+import '../../views/tetris/piece.dart';
+import '../../views/tetris/pixel.dart';
+import '../../views/tetris/values.dart';
 
 List<List<Tetromino?>> gameBoard = List.generate(
   colLength,

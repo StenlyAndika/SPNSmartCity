@@ -7,8 +7,9 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../models/berita/model_data.dart';
 import '../../providers/berita/berita.dart';
-import '../../widgets/reusable_widgets.dart';
-import '../../widgets/skeleton.dart';
+import '../../../widgets/header.dart';
+import '../../../widgets/reusable_widgets.dart';
+import '../../../widgets/skeleton.dart';
 import 'baca.dart';
 
 class Berita extends ConsumerStatefulWidget {
@@ -43,84 +44,74 @@ class _BeritaState extends ConsumerState<Berita> {
     BeritaModel berita = ref.watch(beritaPageProvider).modelBerita;
     final state = ref.watch(beritaPageProvider);
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xffE0E7FF),
-                Colors.white,
-              ],
-              begin: FractionalOffset(0.0, 0.4),
-              end: Alignment.topLeft,
+      backgroundColor: const Color.fromARGB(255, 3, 65, 180),
+      body: ListView(
+        children: [
+          const Header(
+              title: "Berita", subtitle: "informasi dalam kota sungai penuh"),
+          Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: const BoxDecoration(
+              color: Color(0xFFEDECF2),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(35),
+                topRight: Radius.circular(35),
+              ),
             ),
-          ),
-          child: Padding(
-            padding:
-                const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Berita',
-                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                      color: Colors.black, fontWeight: FontWeight.w900),
-                ),
-                Text(
-                  'Dalam kota sungai penuh',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .copyWith(fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 10),
-                const SearchField(),
-                const SizedBox(height: 10),
-                state.isLoading
-                    ? Expanded(
-                        child: ListView.builder(
-                          itemCount: 5,
-                          shrinkWrap: true,
-                          itemBuilder: (BuildContext context, int index) {
-                            return const CardBeritaSkeleton();
-                          },
-                        ),
-                      )
-                    : Expanded(
-                        child: RefreshIndicator(
-                          onRefresh: () => ref
-                              .read(beritaPageProvider.notifier)
-                              .loadBerita(),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, top: 20, right: 20, bottom: 110),
+              child: Column(
+                children: [
+                  const SearchField(),
+                  const SizedBox(height: 10),
+                  state.isLoading
+                      ? Expanded(
                           child: ListView.builder(
-                            controller: scrollController,
-                            itemCount: berita.payload!.data!.length + 1,
+                            itemCount: 5,
                             shrinkWrap: true,
                             itemBuilder: (BuildContext context, int index) {
-                              if (index == berita.payload!.data!.length) {
-                                if (state.hasMoreData!) {
-                                  return const Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 32),
-                                    child: Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  );
-                                } else {
-                                  return const SizedBox.shrink();
-                                }
-                              }
-                              return Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: CardBerita(
-                                    berita: berita.payload!.data![index]),
-                              );
+                              return const CardBeritaSkeleton();
                             },
                           ),
-                        ),
-                      )
-              ],
+                        )
+                      : Expanded(
+                          child: RefreshIndicator(
+                            onRefresh: () => ref
+                                .read(beritaPageProvider.notifier)
+                                .loadBerita(),
+                            child: ListView.builder(
+                              controller: scrollController,
+                              itemCount: berita.payload!.data!.length + 1,
+                              shrinkWrap: true,
+                              itemBuilder: (BuildContext context, int index) {
+                                if (index == berita.payload!.data!.length) {
+                                  if (state.hasMoreData!) {
+                                    return const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 30),
+                                      child: Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    );
+                                  } else {
+                                    return const SizedBox.shrink();
+                                  }
+                                }
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: CardBerita(
+                                      berita: berita.payload!.data![index]),
+                                );
+                              },
+                            ),
+                          ),
+                        )
+                ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -290,15 +281,18 @@ class CardBerita extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: CachedNetworkImage(
-                imageUrl:
-                    'https://sungaipenuhkota.go.id/storage/${berita.gambar}',
-                errorWidget: (context, string, _) {
-                  return const Icon(Icons.error);
-                },
-                width: 130,
-                height: 130,
-                fit: BoxFit.cover,
+              child: Hero(
+                tag: '${berita.gambar}',
+                child: CachedNetworkImage(
+                  imageUrl:
+                      'https://sungaipenuhkota.go.id/storage/${berita.gambar}',
+                  errorWidget: (context, string, _) {
+                    return const Icon(Icons.error);
+                  },
+                  width: 130,
+                  height: 130,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             const SizedBox(

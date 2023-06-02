@@ -1,14 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../view/berita/baca.dart';
-import 'custom_tag.dart';
+import 'baca.dart';
+import '../../../widgets/custom_tag.dart';
 
 class ImageCarousel extends StatelessWidget {
   const ImageCarousel({
     Key? key,
     required this.height,
-    required this.borderRadius,
     required this.width,
     required this.imageUrl,
     this.padding,
@@ -23,7 +22,6 @@ class ImageCarousel extends StatelessWidget {
   final String imageUrl;
   final EdgeInsets? padding;
   final EdgeInsets? margin;
-  final double borderRadius;
   final String timepass;
   final dynamic berita;
   final String judul;
@@ -35,16 +33,6 @@ class ImageCarousel extends StatelessWidget {
       width: width,
       margin: margin,
       padding: padding,
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xff1D1617).withOpacity(0.1),
-            blurRadius: 2,
-            spreadRadius: 0.0,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
       child: Stack(
         children: [
           Positioned.fill(

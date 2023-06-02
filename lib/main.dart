@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:smartcity/view/berita/baca.dart';
-import 'package:smartcity/view/berita/berita.dart';
-import 'package:smartcity/view/index.dart';
-import 'package:smartcity/view/pesan/pesan.dart';
-import 'package:smartcity/view/tetris/board.dart';
-import 'package:smartcity/view/todo/index.dart';
+import 'package:smartcity/gpt/views/chat.dart';
+import 'home.dart';
+import 'webkota/views/berita/index.dart';
+import 'webkota/views/berita/baca.dart';
+import 'webkota/views/pesan/index.dart';
+import 'webkota/views/todo/index.dart';
+import 'webkota/views/tetris/board.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
@@ -17,12 +18,11 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: true,
+      title: 'SPN Central Service',
       theme: ThemeData(
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: {
@@ -30,15 +30,16 @@ class MyApp extends StatelessWidget {
           },
         ),
       ),
-      initialRoute: MainApp.nameRoute,
+      initialRoute: Home.nameRoute,
       routes: {
-        MainApp.nameRoute: (context) => const MainApp(),
+        Home.nameRoute: (context) => const Home(),
         Berita.nameRoute: (context) => const Berita(),
         BacaBerita.nameRoute: (context) => BacaBerita(
             e: ModalRoute.of(context)?.settings.arguments as dynamic),
         Pesan.nameRoute: (context) => const Pesan(),
         DaftarTugas.nameRoute: (context) => const DaftarTugas(),
-        GameBoard.nameRoute: (context) => const GameBoard()
+        GameBoard.nameRoute: (context) => const GameBoard(),
+        ChatScreen.nameRoute: (context) => const ChatScreen(),
       },
     );
   }

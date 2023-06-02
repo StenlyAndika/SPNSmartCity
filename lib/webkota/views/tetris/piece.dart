@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smartcity/view/tetris/board.dart';
-import 'package:smartcity/view/tetris/values.dart';
+import '../../views/tetris/board.dart';
+import '../../views/tetris/values.dart';
 
 class Piece {
   Tetromino type;
