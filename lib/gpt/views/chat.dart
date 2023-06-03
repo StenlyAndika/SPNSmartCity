@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:smartcity/constants/api_gpt.dart';
 
 import '../../widgets/header.dart';
+import '../models/model_chat.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -15,13 +17,6 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class ChatMessage {
-  final String text;
-  final bool isAi;
-
-  ChatMessage({required this.text, required this.isAi});
-}
-
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _textController = TextEditingController();
   final List<ChatMessage> _message = [];
@@ -29,6 +24,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _handleSubmitted(String text) async {
     if (text != '') {
+      FocusManager.instance.primaryFocus?.unfocus();
       _textController.clear();
       ChatMessage message = ChatMessage(text: text, isAi: false);
       setState(() {
@@ -46,14 +42,13 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<String> _getAIResponse(String userMsg) async {
     _isLoading = true;
     final response = await http.post(
-      Uri.parse('https://api.openai.com/v1/chat/completions'),
+      Uri.parse(ApiGPT.url),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization':
-            'Bearer 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',
+        'Authorization': 'Bearer ${ApiGPT.key}',
       },
       body: jsonEncode({
-        "model": "gpt-3.5-turbo-0301",
+        "model": "gpt-3.5-turbo",
         "messages": [
           {"role": "user", "content": userMsg}
         ]
@@ -82,12 +77,12 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           const Header(
               title: 'ChatGPT',
-              subtitle: "AI Chatbot yang ditenagai oleh OpenAI"),
+              subtitle: "Powered by OpenAI GPT 3.5 Turbo Model"),
           Container(
-            padding: const EdgeInsets.only(top: 20),
-            height: MediaQuery.of(context).size.height * 0.87,
+            padding: const EdgeInsets.only(top: 35),
+            height: MediaQuery.of(context).size.height * 0.865,
             decoration: const BoxDecoration(
-              color: Color(0xFFEDECF2),
+              color: Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(35),
                 topRight: Radius.circular(35),
@@ -95,10 +90,8 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             child: Column(
               children: [
-                Flexible(
+                Expanded(
                   child: ListView.builder(
-                    padding:
-                        const EdgeInsets.only(left: 15, right: 15, bottom: 15),
                     reverse: true,
                     itemCount: _message.length,
                     itemBuilder: (_, int index) => _buildChat(_message[index]),
@@ -120,8 +113,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       : const SizedBox(),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  decoration: const BoxDecoration(color: Colors.white),
+                  decoration: const BoxDecoration(color: Color(0xFFEDECF2)),
                   child: _textComposer(),
                 ),
               ],
@@ -134,41 +126,52 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildChat(ChatMessage message) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 2.0),
-      padding: message.isAi
-          ? const EdgeInsets.symmetric(vertical: 9.0, horizontal: 20.0)
-          : const EdgeInsets.symmetric(vertical: 9.0, horizontal: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: 9.0, horizontal: 10.0),
       decoration: BoxDecoration(
-        color: message.isAi ? const Color(0xFF343541) : const Color(0xFF444654),
-        borderRadius: BorderRadius.circular(15.0),
+        color: message.isAi ? Colors.white : const Color(0xFFEDECF2),
       ),
-      child: Text(
-        message.text,
-        style: const TextStyle(fontSize: 18.0, color: Colors.white),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          message.isAi
+              ? Image.asset(
+                  'assets/gpt/chat_logo.png',
+                  height: 30,
+                  width: 30,
+                )
+              : Image.asset(
+                  'assets/gpt/person.png',
+                  height: 30,
+                  width: 30,
+                ),
+          Expanded(
+            child: Text(
+              message.text,
+              style: const TextStyle(fontSize: 16.0, color: Colors.black),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _textComposer() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
       child: Row(
         children: [
           Flexible(
             child: TextField(
-              style: const TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 filled: true,
+                fillColor: Colors.white,
                 border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white, width: 1.0),
-                  borderRadius: BorderRadius.circular(50.0),
+                  borderRadius: BorderRadius.circular(20.0),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white, width: 1.0),
-                  borderRadius: BorderRadius.circular(50.0),
+                  borderRadius: BorderRadius.circular(20.0),
                 ),
-                hintText: 'Tanya GPT',
-                hintStyle: const TextStyle(color: Colors.black),
+                hintText: 'Kirim pesan',
               ),
               controller: _textController,
               onSubmitted: (value) => _handleSubmitted(_textController.text),

@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../constants/api_webkota.dart';
 import '../../models/berita/model_data.dart';
-import '../../constants/constants.dart';
 
 class BeritaState {
   final bool isLoading;

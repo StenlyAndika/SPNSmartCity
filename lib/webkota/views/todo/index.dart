@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive/hive.dart';
-import '../../constants/database.dart';
+import '../../preferences/database.dart';
 import '../../../widgets/header.dart';
 
 class DaftarTugas extends StatefulWidget {

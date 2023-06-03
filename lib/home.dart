@@ -105,7 +105,8 @@ class Home extends ConsumerWidget {
                         child: ImageCarouselSkeleton(),
                       )
                     : Padding(
-                        padding: const EdgeInsets.all(15),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 5),
                         child: CarouselSlider.builder(
                           itemCount: beritaCarousel.payload!.data!.length,
                           itemBuilder: (BuildContext context, int index,
@@ -134,13 +135,28 @@ class Home extends ConsumerWidget {
                 Container(
                   alignment: Alignment.centerLeft,
                   margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: const Text(
-                    "Kategori Layanan",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 3, 65, 180)),
+                      const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                  child: Row(
+                    children: [
+                      const Text(
+                        "Kategori Layanan",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 3, 65, 180)),
+                      ),
+                      const Spacer(),
+                      InkWell(
+                        onTap: () => "",
+                        child: const Text(
+                          "Selengkapnya",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 3, 65, 180)),
+                        ),
+                      )
+                    ],
                   ),
                 ),
                 const GridDashboard(),
@@ -229,27 +245,23 @@ class _GridDashboardState extends State<GridDashboard> {
         icon: Icons.chat,
         title: "ChatGPT",
         subtitle: "Powered by OpenAI",
-        event: ChatScreen.nameRoute),
-    Items(
-        icon: Icons.food_bank_outlined,
-        title: "Jajanan",
-        subtitle: "Onde Onde Tempe",
-        event: ""),
-    Items(
-        icon: Icons.location_on_outlined,
-        title: "Wisata",
-        subtitle: "Cek lokasi wisata terbaru",
-        event: ""),
+        event: ChatScreen.nameRoute,
+        image: "assets/gpt/openai_logo.jpg",
+        isImage: true),
     Items(
         icon: Icons.work_history,
         title: "Daftar Tugas",
         subtitle: "Mancing, Berenang, Tenggelam",
-        event: DaftarTugas.nameRoute),
+        event: DaftarTugas.nameRoute,
+        image: "",
+        isImage: false),
     Items(
         icon: Icons.gamepad,
         title: "Games",
         subtitle: "Tetris",
-        event: GameBoard.nameRoute),
+        event: GameBoard.nameRoute,
+        image: "",
+        isImage: false),
   ];
 
   @override
@@ -280,11 +292,13 @@ class _GridDashboardState extends State<GridDashboard> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      data.icon,
-                      size: 42,
-                      color: const Color.fromARGB(255, 3, 65, 180),
-                    ),
+                    data.isImage
+                        ? Image.asset(data.image, height: 35, width: 35)
+                        : Icon(
+                            data.icon,
+                            size: 42,
+                            color: const Color.fromARGB(255, 3, 65, 180),
+                          ),
                     const SizedBox(height: 5),
                     Text(
                       data.title,
@@ -316,9 +330,13 @@ class Items {
   String title;
   String subtitle;
   String event;
+  String image;
+  bool isImage;
   Items(
       {required this.icon,
       required this.title,
       required this.subtitle,
-      required this.event});
+      required this.event,
+      required this.image,
+      required this.isImage});
 }
