@@ -143,22 +143,22 @@ class CardBeritaSkeleton extends StatelessWidget {
       child: Shimmer.fromColors(
         baseColor: Colors.grey.shade300,
         highlightColor: Colors.grey.shade100,
-        child: Row(
+        child: const Row(
           children: [
-            const Skeleton(
+            Skeleton(
               width: 130,
               height: 130,
             ),
-            const SizedBox(
+            SizedBox(
               width: 10,
             ),
             Expanded(
               flex: 1,
               child: Padding(
-                padding: const EdgeInsets.all(2),
+                padding: EdgeInsets.all(2),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Skeleton(
                       width: 80,
                       height: 20,
@@ -214,12 +214,12 @@ class ImageCarouselSkeleton extends StatelessWidget {
       child: Shimmer.fromColors(
         baseColor: Colors.grey.shade300,
         highlightColor: Colors.grey.shade100,
-        child: Padding(
-          padding: const EdgeInsets.all(10),
+        child: const Padding(
+          padding: EdgeInsets.all(10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Skeleton(
                 width: 100,
                 height: 25,

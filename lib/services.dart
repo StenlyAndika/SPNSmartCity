@@ -3,22 +3,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../models/pesan/model_pesan.dart';
-import '../../providers/pesan/pesan.dart';
+import 'webkota/models/service/model_service.dart';
+import 'webkota/providers/service/service.dart';
 import '../../../widgets/header.dart';
 import '../../../widgets/reusable_widgets.dart';
 import '../../../widgets/skeleton.dart';
 
-class Pesan extends ConsumerStatefulWidget {
-  const Pesan({Key? key}) : super(key: key);
+class Service extends ConsumerStatefulWidget {
+  const Service({Key? key}) : super(key: key);
 
   static const nameRoute = '/pesan';
 
   @override
-  ConsumerState createState() => _PesanState();
+  ConsumerState createState() => _ServiceState();
 }
 
-class _PesanState extends ConsumerState<Pesan> {
+class _ServiceState extends ConsumerState<Service> {
   final scrollController = ScrollController();
 
   @override
@@ -28,9 +28,9 @@ class _PesanState extends ConsumerState<Pesan> {
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
-        final state = ref.watch(pesanProvider);
+        final state = ref.watch(serviceProvider);
         if (!state.isLoading) {
-          ref.read(pesanProvider.notifier).loadMorePesan();
+          ref.read(serviceProvider.notifier).loadMoreService();
         }
       }
     });
@@ -38,8 +38,8 @@ class _PesanState extends ConsumerState<Pesan> {
 
   @override
   Widget build(BuildContext context) {
-    PesanModel pesan = ref.watch(pesanProvider).modelPesan;
-    final state = ref.watch(pesanProvider);
+    ServiceModel pesan = ref.watch(serviceProvider).modelService;
+    final state = ref.watch(serviceProvider);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 3, 65, 180),
       body: ListView(
@@ -67,7 +67,7 @@ class _PesanState extends ConsumerState<Pesan> {
                             itemCount: 5,
                             shrinkWrap: true,
                             itemBuilder: (BuildContext context, int index) {
-                              return const CardPesanSkeleton();
+                              return const CardServiceSkeleton();
                             },
                           ),
                         )
@@ -107,8 +107,8 @@ class _PesanState extends ConsumerState<Pesan> {
   }
 }
 
-class CardPesanSkeleton extends StatelessWidget {
-  const CardPesanSkeleton({
+class CardServiceSkeleton extends StatelessWidget {
+  const CardServiceSkeleton({
     Key? key,
   }) : super(key: key);
 
@@ -191,7 +191,7 @@ class CardPesan extends ConsumerWidget {
         children: [
           SlidableAction(
             onPressed: (e) {
-              ref.read(pesanProvider.notifier).deletePesan(pesan.id.toString());
+              
             },
             backgroundColor: const Color(0xFFFE4A49),
             borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -247,36 +247,7 @@ class CardPesan extends ConsumerWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
-                      pesan.email.toString(),
-                      style: const TextStyle(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      pesan.wa.toString(),
-                      style: const TextStyle(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Divider(
-                      height: 5,
-                      thickness: 2,
-                      color: Colors.black26,
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      pesan.pesan
-                          .toString()
-                          .replaceAll(RegExp(r'<[^>]*>|&nbsp;'), '')
-                          .replaceAll('&quot;', '"'),
-                      style: const TextStyle(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    
                   ],
                 ),
               ),

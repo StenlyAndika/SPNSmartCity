@@ -1,8 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:smartcity/gpt/views/chat.dart';
 
 import 'webkota/models/berita/model_data.dart';
 import 'webkota/providers/berita/berita.dart';
@@ -10,8 +10,9 @@ import 'widgets/skeleton.dart';
 import 'webkota/views/berita/image_carousel.dart';
 import 'webkota/views/berita/index.dart';
 import 'webkota/views/pesan/index.dart';
-import 'webkota/views/tetris/board.dart';
-import 'webkota/views/todo/index.dart';
+
+import 'webkota/models/service/model_service.dart';
+import 'webkota/providers/service/service.dart';
 
 class Home extends ConsumerWidget {
   const Home({super.key});
@@ -29,9 +30,9 @@ class Home extends ConsumerWidget {
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       "Sungai Penuh",
                       style: TextStyle(
@@ -194,12 +195,12 @@ class ImageCarouselSkeleton extends StatelessWidget {
       child: Shimmer.fromColors(
         baseColor: Colors.grey.shade300,
         highlightColor: Colors.grey.shade100,
-        child: Padding(
-          padding: const EdgeInsets.all(10),
+        child: const Padding(
+          padding: EdgeInsets.all(10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Skeleton(
                 width: 100,
                 height: 25,
@@ -232,95 +233,85 @@ class ImageCarouselSkeleton extends StatelessWidget {
   }
 }
 
-class GridDashboard extends StatefulWidget {
+class GridDashboard extends ConsumerStatefulWidget {
   const GridDashboard({Key? key}) : super(key: key);
 
   @override
-  State<GridDashboard> createState() => _GridDashboardState();
+  ConsumerState createState() => _GridDashboardState();
 }
 
-class _GridDashboardState extends State<GridDashboard> {
-  List<Items> item = [
-    Items(
-        icon: Icons.chat,
-        title: "ChatGPT",
-        subtitle: "Powered by OpenAI",
-        event: ChatScreen.nameRoute,
-        image: "assets/gpt/openai_logo.jpg",
-        isImage: true),
-    Items(
-        icon: Icons.work_history,
-        title: "Daftar Tugas",
-        subtitle: "Mancing, Berenang, Tenggelam",
-        event: DaftarTugas.nameRoute,
-        image: "",
-        isImage: false),
-    Items(
-        icon: Icons.gamepad,
-        title: "Games",
-        subtitle: "Tetris",
-        event: GameBoard.nameRoute,
-        image: "",
-        isImage: false),
-  ];
+class _GridDashboardState extends ConsumerState<GridDashboard> {
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent ==
+          scrollController.offset) {
+        final state = ref.watch(serviceProvider);
+        if (!state.isLoading) {
+          ref.read(serviceProvider.notifier).loadMoreService();
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    ServiceModel service = ref.watch(serviceProvider).modelService;
+    final state = ref.watch(serviceProvider);
     return Flexible(
-      child: GridView.count(
-          childAspectRatio: 1.0,
-          padding: const EdgeInsets.only(left: 20, right: 20),
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          crossAxisSpacing: 15,
-          mainAxisSpacing: 15,
-          children: item.map((data) {
-            return InkWell(
-              onTap: () => Navigator.of(context).pushNamed(data.event),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xff1D1617).withOpacity(0.1),
-                      blurRadius: 2,
-                      spreadRadius: 0,
-                      offset: const Offset(3, 3),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    data.isImage
-                        ? Image.asset(data.image, height: 35, width: 35)
-                        : Icon(
-                            data.icon,
-                            size: 42,
-                            color: const Color.fromARGB(255, 3, 65, 180),
-                          ),
-                    const SizedBox(height: 5),
-                    Text(
-                      data.title,
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 3, 65, 180),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      data.subtitle,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          color: Colors.black38,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
+        ),
+        itemCount: service.payload!.data!.length,
+        itemBuilder: (context, index) {
+          final item = service.payload!.data![index];
+          return GridTile(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xff1D1617).withOpacity(0.1),
+                    blurRadius: 2,
+                    spreadRadius: 0,
+                    offset: const Offset(3, 3),
+                  ),
+                ],
               ),
-            );
-          }).toList()),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Hero(
+                    tag: item.gambar.toString(),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          'https://sungaipenuhkota.go.id/storage/${item.gambar}',
+                      errorWidget: (context, string, _) {
+                        return const Icon(Icons.error);
+                      },
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  // const SizedBox(height: 5),
+                  // Text(
+                  //   item.nama.toString(),
+                  //   style: const TextStyle(
+                  //       color: Color.fromARGB(255, 3, 65, 180),
+                  //       fontSize: 16,
+                  //       fontWeight: FontWeight.w600),
+                  // ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
