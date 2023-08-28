@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:smartcity/gpt/views/chat.dart';
 import 'home.dart';
 import 'webkota/views/berita/index.dart';
 import 'webkota/views/berita/baca.dart';
 import 'webkota/views/pesan/index.dart';
-import 'webkota/views/todo/index.dart';
-import 'webkota/views/tetris/board.dart';
+import 'webkota/views/webview/index.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
@@ -37,9 +35,7 @@ class MyApp extends StatelessWidget {
         BacaBerita.nameRoute: (context) => BacaBerita(
             e: ModalRoute.of(context)?.settings.arguments as dynamic),
         Pesan.nameRoute: (context) => const Pesan(),
-        DaftarTugas.nameRoute: (context) => const DaftarTugas(),
-        GameBoard.nameRoute: (context) => const GameBoard(),
-        ChatScreen.nameRoute: (context) => const ChatScreen(),
+        ServiceView.nameRoute: (context) => const ServiceView(),
       },
     );
   }

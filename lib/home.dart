@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'webkota/models/berita/model_data.dart';
+import 'webkota/models/berita/model_data.dart' as beritam;
 import 'webkota/providers/berita/berita.dart';
 import 'widgets/skeleton.dart';
 import 'webkota/views/berita/image_carousel.dart';
 import 'webkota/views/berita/index.dart';
 import 'webkota/views/pesan/index.dart';
+import 'webkota/views/webview/index.dart';
 
-import 'webkota/models/service/model_service.dart';
+import 'webkota/models/service/model_service.dart' as servicem;
 import 'webkota/providers/service/service.dart';
 
 class Home extends ConsumerWidget {
@@ -20,7 +21,8 @@ class Home extends ConsumerWidget {
   static const nameRoute = '/';
   @override
   Widget build(BuildContext context, ref) {
-    BeritaModel beritaCarousel = ref.watch(beritaCarouselProvider).modelBerita;
+    beritam.BeritaModel beritaCarousel =
+        ref.watch(beritaCarouselProvider).modelBerita;
     bool isCarouselLoading = ref.watch(beritaCarouselProvider).isLoading;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 3, 65, 180),
@@ -258,59 +260,97 @@ class _GridDashboardState extends ConsumerState<GridDashboard> {
     });
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   ServiceModel service = ref.watch(serviceProvider).modelService;
+  //   return Flexible(
+  //     child: GridView.count(
+  //         childAspectRatio: 1.0,
+  //         padding: const EdgeInsets.only(left: 20, right: 20),
+  //         crossAxisCount: 3,
+  //         crossAxisSpacing: 15,
+  //         mainAxisSpacing: 15,
+  //         children: service.payload!.data!.map((data) {
+  //           return InkWell(
+  //             onTap: () => Navigator.pushNamed(context, ServiceView.nameRoute),
+  //             // onTap: () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //             //   content: Text(data.nama.toString()),
+  //             // )),
+  //             child: Container(
+  //               decoration: BoxDecoration(
+  //                 color: Colors.white,
+  //                 borderRadius: BorderRadius.circular(10),
+  //                 boxShadow: [
+  //                   BoxShadow(
+  //                     color: const Color(0xff1D1617).withOpacity(0.1),
+  //                     blurRadius: 2,
+  //                     spreadRadius: 0,
+  //                     offset: const Offset(3, 3),
+  //                   ),
+  //                 ],
+  //               ),
+  //               child: Hero(
+  //                 tag: data.nama.toString(),
+  //                 child: CachedNetworkImage(
+  //                   imageUrl:
+  //                       'https://sungaipenuhkota.go.id/storage/${data.gambar}',
+  //                   errorWidget: (context, string, _) {
+  //                     return const Icon(Icons.error);
+  //                   },
+  //                   fit: BoxFit.contain,
+  //                 ),
+  //               ),
+  //             ),
+  //           );
+  //         }).toList()),
+  //   );
+  // }
   @override
   Widget build(BuildContext context) {
-    ServiceModel service = ref.watch(serviceProvider).modelService;
-    final state = ref.watch(serviceProvider);
+    servicem.ServiceModel service = ref.watch(serviceProvider).modelService;
     return Flexible(
-      child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-        ),
-        itemCount: service.payload!.data!.length,
-        itemBuilder: (context, index) {
-          final item = service.payload!.data![index];
-          return GridTile(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xff1D1617).withOpacity(0.1),
-                    blurRadius: 2,
-                    spreadRadius: 0,
-                    offset: const Offset(3, 3),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Hero(
-                    tag: item.gambar.toString(),
-                    child: CachedNetworkImage(
-                      imageUrl:
-                          'https://sungaipenuhkota.go.id/storage/${item.gambar}',
-                      errorWidget: (context, string, _) {
-                        return const Icon(Icons.error);
-                      },
-                      fit: BoxFit.cover,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: 15,
+            mainAxisSpacing: 15,
+          ),
+          itemCount: service.payload!.data!.length,
+          itemBuilder: (BuildContext context, int index) {
+            final servicem.Data srv = service.payload!.data![index];
+            return InkWell(
+              onTap: () => Navigator.pushNamed(context, ServiceView.nameRoute,
+                  arguments: srv),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xff1D1617).withOpacity(0.1),
+                      blurRadius: 2,
+                      spreadRadius: 0,
+                      offset: const Offset(3, 3),
                     ),
+                  ],
+                ),
+                child: Hero(
+                  tag: srv.nama.toString(),
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        'https://sungaipenuhkota.go.id/storage/${srv.gambar}',
+                    errorWidget: (context, string, _) {
+                      return const Icon(Icons.error);
+                    },
+                    fit: BoxFit.contain,
                   ),
-                  // const SizedBox(height: 5),
-                  // Text(
-                  //   item.nama.toString(),
-                  //   style: const TextStyle(
-                  //       color: Color.fromARGB(255, 3, 65, 180),
-                  //       fontSize: 16,
-                  //       fontWeight: FontWeight.w600),
-                  // ),
-                ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
