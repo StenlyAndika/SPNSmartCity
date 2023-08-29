@@ -260,51 +260,6 @@ class _GridDashboardState extends ConsumerState<GridDashboard> {
     });
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   ServiceModel service = ref.watch(serviceProvider).modelService;
-  //   return Flexible(
-  //     child: GridView.count(
-  //         childAspectRatio: 1.0,
-  //         padding: const EdgeInsets.only(left: 20, right: 20),
-  //         crossAxisCount: 3,
-  //         crossAxisSpacing: 15,
-  //         mainAxisSpacing: 15,
-  //         children: service.payload!.data!.map((data) {
-  //           return InkWell(
-  //             onTap: () => Navigator.pushNamed(context, ServiceView.nameRoute),
-  //             // onTap: () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //             //   content: Text(data.nama.toString()),
-  //             // )),
-  //             child: Container(
-  //               decoration: BoxDecoration(
-  //                 color: Colors.white,
-  //                 borderRadius: BorderRadius.circular(10),
-  //                 boxShadow: [
-  //                   BoxShadow(
-  //                     color: const Color(0xff1D1617).withOpacity(0.1),
-  //                     blurRadius: 2,
-  //                     spreadRadius: 0,
-  //                     offset: const Offset(3, 3),
-  //                   ),
-  //                 ],
-  //               ),
-  //               child: Hero(
-  //                 tag: data.nama.toString(),
-  //                 child: CachedNetworkImage(
-  //                   imageUrl:
-  //                       'https://sungaipenuhkota.go.id/storage/${data.gambar}',
-  //                   errorWidget: (context, string, _) {
-  //                     return const Icon(Icons.error);
-  //                   },
-  //                   fit: BoxFit.contain,
-  //                 ),
-  //               ),
-  //             ),
-  //           );
-  //         }).toList()),
-  //   );
-  // }
   @override
   Widget build(BuildContext context) {
     servicem.ServiceModel service = ref.watch(serviceProvider).modelService;
